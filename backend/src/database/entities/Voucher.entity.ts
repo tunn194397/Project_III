@@ -26,7 +26,7 @@ export class Voucher {
 
     @Column({ name: 'off_value', type: 'integer' })
     public offValue: number;
-c
+
     @Column({ name: 'off_string', type: 'nvarchar', length: 500 })
     public offString: string;
 

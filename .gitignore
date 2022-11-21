@@ -157,6 +157,7 @@ ENV/
 env.bak/
 venv.bak/
 swagger.json
+backend/package-lock.json
 
 # Spyder project settings
 .spyderproject
