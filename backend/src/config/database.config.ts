@@ -23,7 +23,8 @@ import {
     UpdateSalaryHistory,
     User,
     Report,
-    Voucher
+    Voucher,
+    Warehouse
 } from '../database/entities';
 
 export const databaseConfig: ConnectionOptions = {
@@ -57,7 +58,8 @@ export const databaseConfig: ConnectionOptions = {
         UpdateSalaryHistory,
         User,
         Report,
-        Voucher
+        Voucher,
+        Warehouse
     ],
     synchronize: true,
     logging: ["error"],

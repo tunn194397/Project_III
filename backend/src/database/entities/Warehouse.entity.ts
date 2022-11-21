@@ -1,25 +1,22 @@
 import { Entity, PrimaryColumn, Column, BeforeInsert, BeforeUpdate, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { nowInMillis } from '../../shared/utils';
 
-@Entity('manager')
-export class Manager {
+@Entity('warehouse')
+export class Warehouse {
     @PrimaryGeneratedColumn({ name: 'id', type: 'int'})
     public id: number;
 
-    @Column({ name: 'user_id', type: 'int' })
-    public userId: number;
+    @Column({ name: 'item_id', type: 'int' })
+    public itemId: number;
 
-    @Column({ name: 'branch_id', type: 'int', nullable: true })
-    public branchId: number;
+    @Column({ name: 'total_quantity', type: 'int', nullable: true })
+    public totalQuantity: number;
 
-    @Column({ name: 'certificates', type: 'nvarchar', length: 1000 , nullable: true})
-    public certificates: string;
+    @Column({ name: 'sole_quantity', type: 'int', default: 0 })
+    public soleQuantity: number;
 
-    @Column({ name: 'introduce', type: 'nvarchar', length: 1000, nullable: true })
-    public introduce: string;
-
-    @Column({ name: 'salary', type: 'int', nullable: true})
-    public salary: string;
+    @Column({ name: 'remain_quantity', type: 'int', nullable: true})
+    public remainQuantity: number;
 
     @Column({ name: 'created_at', type: 'bigint', nullable: true })
     public createdAt: number;
