@@ -36,6 +36,7 @@ export class AuthService {
     );
 
     if (isValidPassword) {
+      console.log(user.id, user.roleId)
       const token = this.jwtService.sign({
         id: user.id,
         role: user.roleId,

@@ -1,11 +1,16 @@
+import ManagerLoginPage from "../components/pages/manager/Login";
+import ManagerLayout from "../components/templates/manager/ManagerLayout";
+
 export const routes = [
     {
-        path: '/admin',
+        path: '/manager',
+        element: <ManagerLayout />,
         children: [
         ]
     },
     {
-        path: '/admin/login',
+        path: '/manager/login',
+        element:<ManagerLoginPage />
     },
     {
         path: '/',
