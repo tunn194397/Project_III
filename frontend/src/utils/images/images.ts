@@ -8,6 +8,7 @@ import warehouse from '../../assets/icon/warehouse.png';
 import you from '../../assets/icon/you.png';
 import help from '../../assets/icon/help.png';
 import setting from '../../assets/icon/setting.png';
+import monitor from '../../assets/icon/monitor.png';
 
 export const IMAGES = {
     icon: {
@@ -20,7 +21,8 @@ export const IMAGES = {
         warehouse,
         you,
         help,
-        setting
+        setting,
+        monitor
     },
     logo: {
 

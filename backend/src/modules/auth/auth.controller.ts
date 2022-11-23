@@ -23,7 +23,7 @@ export class AuthController {
     return this.service.validateLogin(loginRequestDTO, 'USER');
   }
 
-  @Post('admin/login')
+  @Post('manager/login')
   @HttpCode(HttpStatus.OK)
   public async adminLogin(@Body() LoginRequestDTO: LoginRequestDTO) {
     return this.service.validateLogin(LoginRequestDTO, 'MANAGER');
