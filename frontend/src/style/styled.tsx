@@ -178,7 +178,7 @@ export const WrapperSideBar = styled.div`
 `;
 
 export const Container = styled.div`
-  background: #2e3192;
+  background: #3d42c2;
 `;
 
 export const Wrapper = styled.div`
@@ -194,4 +194,49 @@ export const Image = styled.img<{ width: string; height: string }>`
     `
     height: ${props.width};
   `}
+`;
+
+
+export const WrapperAll= styled.div`
+  -webkit-font-smoothing: initial;
+`;
+
+export const WrapperContent = styled.div`
+  margin-top: 70px;
+  .collapsem {
+    margin-left: 290px;
+    @media screen and (max-width: 767px) {
+      margin-left: 0;
+    }
+  }
+  .no-collapsem {
+    margin-left: 50px;
+    @media screen and (max-width: 767px) {
+      margin-left: 0;
+    }
+  }
+`;
+export const Content = styled.div<any>`
+  background: #f2f3f7;
+  min-height: calc(100vh - 85px);
+  margin-top: 85px;
+  padding: 0 40px 0 60px;
+
+  @media screen and (max-width: 1600px) {
+    padding: 0 40px 0 40px;
+    ${(props) =>
+    !props.collapsed &&
+    `
+        padding: 0 40px 0 60px;
+    `}
+  }
+
+  @media screen and (max-width: 576px) {
+    padding: 0 10px 0 10px;
+    ${(props) =>
+    !props.collapsed &&
+    `
+        padding: 0 10px 0 10px;
+    `}
+  }
 `;

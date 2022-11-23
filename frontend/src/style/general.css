@@ -1,0 +1,25 @@
+/* @import url('./fonts/fonts.css'); */
+
+:root {
+    --navbar-height: 100px;
+
+    /* color */
+    --white-color: #ffffff;
+    --black-color: #000000;
+
+    --primary-color: #ffffff;
+    --secondary-color: #2e3192;
+    --third-color: #5b5d6b;
+    --fourth-color: #ed9c03;
+    --fifth-color: #33a451;
+    --sixth-color: #ea3f30;
+
+    --bg-primary-color: #ffffff;
+    --bg-secondary-color: #2e3192;
+    --bg-danger-color: #c82333;
+    --bg-filled-color: #f2f3f7;
+    --bg-disabled-color: #2e3192;
+
+    --primary-border-color: #5b5d6b;
+    --secondary-border-color: #d9d9d9;
+}

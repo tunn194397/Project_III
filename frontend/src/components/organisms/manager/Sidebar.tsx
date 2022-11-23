@@ -3,6 +3,7 @@ import { CollapseIconButton, collapseIcon, expandIcon, WrapperSideBar } from '..
 import { FC } from 'react';
 import { ProSidebar, Menu, MenuItem, SubMenu, SidebarContent, SidebarFooter } from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
+import {useNavigate} from "react-router-dom";
 
 interface Props {
   menuCollapse: any;
@@ -11,6 +12,7 @@ interface Props {
 
 
 const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
+  const navigate = useNavigate()
   return (
       <WrapperSideBar className="large-screen" style={{ width: !menuCollapse ? '290px' : '100px'}}>
         <CollapseIconButton className={`${menuCollapse ? 'expand' : 'collapse'}`}>
@@ -24,11 +26,14 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                 marginTop: '20px',
               }}
           >
-              { managerRoute.map((item) =>
+              { managerRoute.map((item, index) =>
                 !item.subRoute.length ? (
                     <Menu iconShape="square">
                       <MenuItem
+                          active={item.path === window.location.pathname || (index === 0 && window.location.pathname === '/')}
+                          key = {item.path}
                           icon={item.icon}
+                          onClick = {() => navigate(item.path || '')}
                           style={{
                             font: 'normal normal normal 16px Lato',
                           }}
@@ -47,14 +52,16 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                             marginBottom: 10
                           }}
                       >
-                        {item.subRoute?.map((item) => (
+                        {item.subRoute?.map((e) => (
                             <MenuItem
-                                key={item.path}
+                                active={e.path === window.location.pathname}
+                                key={e.path}
+                                onClick = {() => navigate(e.path || '')}
                                 style={{
                                   font: 'normal normal normal 16px Lato',
                                 }}
                             >
-                              {item.title}
+                              {e.title}
                             </MenuItem>
                         ))}
                       </SubMenu>
@@ -67,6 +74,8 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
             <Menu iconShape="square">
                 {managerExtraRoute.map((item) => (
                   <MenuItem
+                      active={item.path === window.location.pathname}
+                      onClick = {() => navigate(item.path || '')}
                       key={item.path}
                       icon={item.icon}
                       style={{

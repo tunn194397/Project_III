@@ -30,7 +30,7 @@ const handleError = (err: AxiosError<IError>) => {
         err.config.url !== '/user/is-active-security'
     ) {
         localStorage.clear();
-        window.location.href = userRoute.home.path;
+        window.location.href = userRoute[0].path;
     }
     const data = err?.response?.data;
     if (typeof data?.meta.message === 'string') {

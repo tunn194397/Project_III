@@ -1,11 +1,32 @@
 import {IMAGES} from "../../../utils/images/images";
-import {HeaderWrapper} from "../../../style/styled";
+import {HeaderWrapper, Image} from "../../../style/styled";
+import {useContext} from "react";
+import {AuthContext} from "../../../context/AuthContext";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+import {logger} from "@storybook/node-logger";
 
 export default function Navbar() {
+  const storeName = "NGOCTU COMPUTER";
+  const {clearAuthData} = useContext(AuthContext)
+  const navigate = useNavigate()
+  const logout = () => {
+    clearAuthData?.();
+    toast.success('Logout successful!');
+  }
+  const returnHome = () => {
+    navigate('/manager/')
+  }
+  const goToPersonal = () => {
+    navigate('/manager/personal')
+  }
   return (
       <HeaderWrapper className="w-full fixed top-0">
         <nav className='fixed border-0 flex top-0 w-screen justify-between px-10 py-5 items-center bg-gray-900 z-10'>
-          <h1 className='text-xl text-white font-bold'>NGOCTU COMPUTER</h1>
+          <div className='flex items-center'>
+            <Image width="50px" height="50px" src={IMAGES.icon.monitor} onClick = {returnHome}/>
+            <h1 className='text-xl text-white font-bold' style={{marginLeft : 30}}> {storeName}</h1>
+          </div>
           <div className='flex items-center'>
             <div className='md:flex items-center border px-2 py-1 border-white rounded-md bg-white hidden'>
               <svg
@@ -29,6 +50,7 @@ export default function Navbar() {
                         width: '43px',
                         height: '43px',
                       }}
+                      onClick = {goToPersonal}
                   />
                 </div>
               </li>
@@ -50,6 +72,7 @@ export default function Navbar() {
                     viewBox='0 0 24 24'
                     stroke='currentColor'
                     strokeWidth='2'
+                    onClick={logout}
                 >
                   <path
                       strokeLinecap='round'
