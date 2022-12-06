@@ -7,7 +7,7 @@ export default function ManagerHome() {
     console.log(token);
     return (
         <div>
-            <h1> HOME</h1>
+            <h1></h1>
         </div>
     );
 }

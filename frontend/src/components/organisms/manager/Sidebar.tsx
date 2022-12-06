@@ -35,7 +35,7 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                           icon={item.icon}
                           onClick = {() => navigate(item.path || '')}
                           style={{
-                            font: 'normal normal normal 16px Lato',
+                            font: 'normal normal normal 16px',
                           }}
                       >
                         {item.title}
@@ -48,7 +48,7 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                           title={item.title}
                           icon={item.icon}
                           style={{
-                            font: 'normal normal normal 16px Lato',
+                            font: 'normal normal normal 16px ',
                             marginBottom: 10
                           }}
                       >
@@ -58,7 +58,7 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                                 key={e.path}
                                 onClick = {() => navigate(e.path || '')}
                                 style={{
-                                  font: 'normal normal normal 16px Lato',
+                                  font: 'normal normal normal 16px ',
                                 }}
                             >
                               {e.title}
@@ -79,7 +79,7 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                       key={item.path}
                       icon={item.icon}
                       style={{
-                        font: 'normal normal normal 16px Lato',
+                        font: 'normal normal normal 16px ',
                         marginTop: 10
                       }}
                   >

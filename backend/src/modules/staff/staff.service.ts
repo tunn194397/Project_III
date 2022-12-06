@@ -1,28 +1,28 @@
 import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
-import {Customer, Manager, Staff, User} from "../../database/entities";
+import {Staff, Manager,  User} from "../../database/entities";
 import {Brackets, Repository} from "typeorm";
 import {FindUserDto} from "../../shared/request/findUser.dto";
 import {NewUserDto} from "../manager/dto/newUser.dto";
 import {NewManagerDto} from "../manager/dto/newManager.dto";
 import {UpdateManagerDto} from "../manager/dto/updateManager.dto";
 import * as bcrypt from 'bcrypt';
-import {NewCustomerDto} from "./dto/newCustomer.dto";
-import {UpdateCustomerDto} from "./dto/updateCustomer.dto";
+import {NewStaffDto} from "./dto/newStaff.dto";
+import {UpdateStaffDto} from "./dto/updateStaff.dto";
 
 @Injectable()
-export class CustomerService {
+export class StaffService {
     constructor(
-        @InjectRepository(Customer)
-        private customerRepository: Repository<Customer>,
+        @InjectRepository(Staff)
+        private staffRepository: Repository<Staff>,
 
         @InjectRepository(User)
         private userRepository: Repository<User>
     ) {}
 
     async getList(findUserDto: FindUserDto) {
-        return this.customerRepository.createQueryBuilder('customer')
-            .innerJoin(User, 'user', 'user.id = customer.user_id')
+        return this.staffRepository.createQueryBuilder('staff')
+            .innerJoin(User, 'user', 'user.id = staff.user_id')
             .where(new Brackets(queryBuilder => {
                 queryBuilder.where('user.id = :userId', {userId: findUserDto.userId})
                     .andWhere('user.first_name like :firstName', {firstName: `%${findUserDto.firstName}%`})
@@ -33,20 +33,16 @@ export class CustomerService {
                     .andWhere('user.birthday = :birthday', {birthday: findUserDto.birthday})
                     .andWhere('user.full_name like :fullName', {fullName:`%${findUserDto.fullName}%` })
                     .andWhere('user.role_id = :roleId', {roleId: findUserDto.roleId})
-                    .andWhere('customer.register_type = :registerType', {registerType: findUserDto.registerType})
-                    .andWhere('customer.register_staff_id = :registerStaffId', {registerStaffId: findUserDto.registerStaffId})
-                    .andWhere('customer.level = :level', {level: findUserDto.level})
-                    .andWhere('customer.score = :score', {score: findUserDto.score})
             }))
             .getMany()
 
     }
 
-    async getCustomerDetail(id : number) {
-        return await this.customerRepository.findOne({id: id})
+    async getStaffDetail(id : number) {
+        return await this.staffRepository.findOne({id: id})
     }
 
-    async createNewCustomer(newUserDto: NewUserDto, newCustomerDto: NewCustomerDto) {
+    async createNewStaff(newUserDto: NewUserDto, newStaffDto: NewStaffDto) {
         const newUser = this.userRepository.create(newUserDto);
         newUser.fullName = newUser.firstName + ' ' + newUser.lastName;
         const saltOrRounds = 10;
@@ -56,13 +52,13 @@ export class CustomerService {
         );
         const newUserEntity = await this.userRepository.save(newUser);
 
-        const newManager = await this.customerRepository.create(newCustomerDto);
+        const newManager = await this.staffRepository.create(newStaffDto);
         newManager.userId = newUserEntity.id;
-        return await this.customerRepository.save(newManager)
+        return await this.staffRepository.save(newManager)
     }
 
-    async updateCustomerDetail(id: number, updateCustomerDto: UpdateCustomerDto) {
-        return await this.customerRepository.update(id, updateCustomerDto)
+    async updateStaffDetail(id: number, updateStaffDto: UpdateStaffDto) {
+        return await this.staffRepository.update(id, updateStaffDto)
     }
 
 

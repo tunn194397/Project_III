@@ -19,7 +19,7 @@ export class Manager {
     public introduce: string;
 
     @Column({ name: 'salary', type: 'int', nullable: true})
-    public salary: string;
+    public salary: number;
 
     @Column({ name: 'created_at', type: 'bigint', nullable: true })
     public createdAt: number;

@@ -12,6 +12,9 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionFilter } from './config/exception/exception.filter';
 import {UsersModule} from "./modules/user/users.module";
 import {AuthModule} from "./modules/auth/auth.module";
+import {ManagerModule} from "./modules/manager/manager.module";
+import {CustomerModule} from "./modules/customer/customer.module";
+import {StaffModule} from "./modules/staff/staff.module";
 
 @Module({
   imports: [
@@ -22,7 +25,10 @@ import {AuthModule} from "./modules/auth/auth.module";
       }),
       TypeOrmModule.forRoot(databaseConfig),
       UsersModule,
-      AuthModule
+      AuthModule,
+      ManagerModule,
+      CustomerModule,
+      StaffModule
   ],
   controllers: [AppController],
   providers: [

@@ -2,7 +2,7 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     fontFamily: {
-      ssp: ['Source Sans Pro', 'sans-serif']
+      ssp: ['Poppins', 'Source Sans Pro', 'sans-serif']
     },
     extend: {
       backgroundImage: {

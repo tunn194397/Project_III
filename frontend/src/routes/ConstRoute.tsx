@@ -1,5 +1,4 @@
 import {IMAGES} from "../utils/images/images";
-import { Image } from '../style/styled';
 import ManagerHome from "../components/pages/manager/Home";
 import UserHome from "../components/pages/user/UserHome";
 import ManagerManager from "../components/pages/manager/employee/Managers";
@@ -12,10 +11,13 @@ import ManagerWarehouse from "../components/pages/manager/Warehouse";
 import ManagerPersonal from "../components/pages/manager/Personal";
 import ManagerSetting from "../components/pages/manager/Setting";
 import ManagerHelp from "../components/pages/manager/Help";
+import ManagerItem from "../components/pages/manager/items/Item";
+import ManagerPermission from "../components/pages/manager/Permission";
+import ManagerVoucher from "../components/pages/manager/Voucher";
 export const userRoute = [
     {
         title: 'Home',
-        path: '/',
+        path: '/user/',
         subRoute: [],
         element: <UserHome/>
     },
@@ -24,14 +26,14 @@ export const managerRoute = [
     {
         title: 'Home',
         path: '/manager',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.home} />,
+        icon: IMAGES.icon.home,
         subRoute: [],
         element: <ManagerHome/>
     },
     {
         title: 'Employee',
         path: '/manager/employees',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.personal} />,
+        icon: IMAGES.icon.personal,
         subRoute: [
             {
                 title: 'Managers',
@@ -50,7 +52,7 @@ export const managerRoute = [
     {
         title: 'Items Management',
         path: '/manager/items',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.item} />,
+        icon: IMAGES.icon.item,
         subRoute: [
             {
                 title: 'Supply receipts',
@@ -64,28 +66,48 @@ export const managerRoute = [
                 icon: '',
                 element: <ManagerSellReceipt/>
             },
+            {
+                title: 'Items',
+                path: '/manager/items/items',
+                icon: '',
+                element:  <ManagerItem/>
+            }
         ]
     },
     {
         title: 'Supply',
         path: '/manager/supply',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.supply} />,
+        icon: IMAGES.icon.supply,
         subRoute: [],
         element: <ManagerSupply/>
     },
     {
         title: 'Customers',
         path: '/manager/customers',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.customer} />,
+        icon: IMAGES.icon.customer,
         subRoute: [],
         element: <ManagerCustomer/>
     },
     {
         title: 'Warehouse',
         path: '/manager/warehouse',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.warehouse} />,
+        icon: IMAGES.icon.warehouse,
         subRoute: [],
         element: <ManagerWarehouse/>
+    },
+    {
+        title: 'Sale off and Voucher' ,
+        path: '/manager/voucher',
+        icon: IMAGES.icon.warehouse,
+        subRoute: [],
+        element: <ManagerVoucher/>
+    },
+    {
+        title: 'Permission',
+        path: '/manager/permission',
+        icon: IMAGES.icon.warehouse,
+        subRoute: [],
+        element: <ManagerPermission/>
     },
 ]
 
@@ -93,21 +115,21 @@ export const managerExtraRoute = [
     {
         title: 'You',
         path: '/manager/personal',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.you} />,
+        icon: IMAGES.icon.you,
         subRoute: [],
         element: <ManagerPersonal/>
     },
     {
         title: 'Settings',
         path: '/manager/setting',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.setting} />,
+        icon: IMAGES.icon.setting,
         subRoute: [],
         element: <ManagerSetting/>
     },
     {
         title: 'Help center',
         path: '/manager/help',
-        icon: <Image width="25px" height="25px" src={IMAGES.icon.help} />,
+        icon: IMAGES.icon.help,
         subRoute: [],
         element: <ManagerHelp/>
     },

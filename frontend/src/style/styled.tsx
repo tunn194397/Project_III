@@ -33,6 +33,29 @@ export const HeaderWrapper = styled.div`
   opacity: 1;
 `;
 
+export const UserHeaderWrapper = styled.div`
+  z-index: 40;
+  padding: 0px 0px 0px 0px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-item: center;
+  box-shadow: 0px 0px 10px #00000029;
+  opacity: 1;
+`;
+
+export const UserMainHeaderWrapper = styled.div`
+  position: sticky;
+  z-index: 30;
+  padding: 0px 0px 0px 0px;
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-item: center;
+  box-shadow: 0px 0px 10px #00000029;
+  opacity: 1;
+`;
+
 export const WrapperSideBar = styled.div`
   position: absolute;
   width: 290px;

@@ -12,7 +12,7 @@ export class Staff {
     @Column({ name: 'branch_id', type: 'int', nullable: true })
     public branchId: number;
 
-    @Column({ name: 'first_worked_date', type: 'date', nullable: true })
+    @Column({ name: 'first_worked_date', type: 'date', nullable: true})
     public firstWorkedDate: string;
 
     @Column({ name: 'working_period', type: 'nvarchar', length: 50, nullable: true })

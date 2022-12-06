@@ -1,10 +1,9 @@
-import {IMAGES} from "../../../utils/images/images";
 import {HeaderWrapper, Image} from "../../../style/styled";
 import {useContext} from "react";
 import {AuthContext} from "../../../context/AuthContext";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
-import {logger} from "@storybook/node-logger";
+import {IMAGES} from "../../../utils/images/images";
 
 export default function Navbar() {
   const storeName = "NGOCTU COMPUTER";
@@ -24,7 +23,7 @@ export default function Navbar() {
       <HeaderWrapper className="w-full fixed top-0">
         <nav className='fixed border-0 flex top-0 w-screen justify-between px-10 py-5 items-center bg-gray-900 z-10'>
           <div className='flex items-center'>
-            <Image width="50px" height="50px" src={IMAGES.icon.monitor} onClick = {returnHome}/>
+            <svg height={40} width={40}>{IMAGES.icon.item}</svg>
             <h1 className='text-xl text-white font-bold' style={{marginLeft : 30}}> {storeName}</h1>
           </div>
           <div className='flex items-center'>

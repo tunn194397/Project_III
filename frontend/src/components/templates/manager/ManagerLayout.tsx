@@ -10,7 +10,7 @@ export default function ManagerLayout() {
         setCollapsed(!collapsed);
     };
     return (
-        <WrapperAll style={{ fontFamily: 'Lato' }}>
+        <WrapperAll>
             <div>
                 <Navbar />
                 <WrapperContent>

@@ -9,4 +9,6 @@ export class DeviceType {
     @Column({ name: 'name', type: 'nvarchar' })
     public name: string;
 
+    @Column({ name: 'parent_id', type: 'int', default: 0 })
+    public parentId: number;
 }
