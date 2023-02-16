@@ -15,6 +15,13 @@ import {AuthModule} from "./modules/auth/auth.module";
 import {ManagerModule} from "./modules/manager/manager.module";
 import {CustomerModule} from "./modules/customer/customer.module";
 import {StaffModule} from "./modules/staff/staff.module";
+import {SupplyModule} from "./modules/supply/supply.module";
+import {ImportReceiptModule} from "./modules/receipt/importReceipt/importReceipt.module";
+import {WarehouseModule} from "./modules/warehouse/warehouse.module";
+import {VoucherModule} from "./modules/voucher/voucher.module";
+import {ItemModule} from "./modules/item/item.module";
+import {SellReceiptModule} from "./modules/receipt/sellReceipt/sellReceipt.module";
+import {DeviceModule} from "./modules/device/device.module";
 
 @Module({
   imports: [
@@ -28,7 +35,14 @@ import {StaffModule} from "./modules/staff/staff.module";
       AuthModule,
       ManagerModule,
       CustomerModule,
-      StaffModule
+      StaffModule,
+      SupplyModule,
+      ItemModule,
+      ImportReceiptModule,
+      SellReceiptModule,
+      WarehouseModule,
+      DeviceModule,
+      VoucherModule
   ],
   controllers: [AppController],
   providers: [

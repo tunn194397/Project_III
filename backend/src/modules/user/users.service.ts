@@ -7,7 +7,7 @@ import { UpdatePasswordDTO } from '../auth/dto/request/update-password.dto';
 import { CreateUserRequestDTO } from './dto/request/create_user.dto';
 import { UpdateUserRequestDTO } from './dto/request/update_user.dto';
 import * as bcrypt from 'bcrypt';
-import {Customer, Manager, Staff, User} from "../../database/entities";
+import {Customer, Manager, Role, RolePermission, Staff, User} from "../../database/entities";
 import {RoleEnum} from "../roles/roles.enum";
 
 @Injectable()
@@ -23,7 +23,13 @@ export class UsersService {
     private managerRepository: Repository<Manager>,
 
     @InjectRepository(Customer)
-    private customerRepository: Repository<Customer>
+    private customerRepository: Repository<Customer>,
+
+    @InjectRepository(Role)
+    private roleRepository: Repository<Role>,
+
+    @InjectRepository(RolePermission)
+    private rolePermissionRepository: Repository<RolePermission>
   ) {}
 
   async create(createProfileDTO: CreateUserRequestDTO) {
@@ -73,9 +79,7 @@ export class UsersService {
   ): Promise<User> {
     let user = await this.usersRepository.findOne({ where: { id } });
     return this.usersRepository.save({
-      ...user,
-      ...updateProfileDTO,
-      updatedAt: Date.now(),
+      ...user, ...updateProfileDTO
     });
   }
 
@@ -95,6 +99,25 @@ export class UsersService {
       passwordHash: hashPassword,
       updatedAt: Date.now(),
     });
+  }
+
+  async getPermissionOfUser(userId: number) {
+    const user = await this.usersRepository.findOne(userId);
+    const permission = await this.rolePermissionRepository.find({
+      roleId: user.roleId
+    })
+    return permission.map((e: any) => {
+      return e.permission;
+    })
+  }
+
+  async findAllUserInOneRole(roleId: number) {
+    const users = await this.usersRepository.find({
+      where: {roleId: roleId}
+    })
+    return {
+      result: users
+    };
   }
 
 }

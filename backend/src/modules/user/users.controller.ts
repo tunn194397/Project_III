@@ -22,9 +22,9 @@ import { RolesGuard } from '../roles/roles.guard';
 import { CreateUserRequestDTO } from './dto/request/create_user.dto';
 import { UpdateUserRequestDTO } from './dto/request/update_user.dto';
 import { UsersService } from './users.service';
+import {Causes} from "../../config/exception/causes";
 
 @ApiBearerAuth()
-@Roles(RoleEnum.user)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Users')
 @Controller({
@@ -60,6 +60,16 @@ export class UsersController {
     );
   }
 
+  @Get('/role')
+  @Roles(RoleEnum.user, RoleEnum.staff, RoleEnum.superManager, RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.sellManager)
+  @HttpCode(HttpStatus.OK)
+  async findAllUserWithRole(
+      @Query('roleId', ParseIntPipe) roleId: number
+  ) {
+    if (roleId < 0 || roleId > 7) throw Causes.DATA_INVALID;
+    return this.usersService.findAllUserInOneRole(roleId);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
@@ -74,6 +84,7 @@ export class UsersController {
   ) {
     return this.usersService.update(id, updateProfileDto);
   }
+
 
   // @Delete(':id')
   // async remove(@Param('id') id: number) {

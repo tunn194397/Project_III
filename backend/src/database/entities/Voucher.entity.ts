@@ -1,5 +1,6 @@
 import { Entity, PrimaryColumn, Column, BeforeInsert, BeforeUpdate, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { nowInMillis } from '../../shared/utils';
+import {Max, Min} from "class-validator";
 
 @Entity('voucher')
 export class Voucher {
@@ -9,11 +10,11 @@ export class Voucher {
     @Column({ name: 'content', type: 'nvarchar', length: 500 })
     public content: string;
 
-    @Column({ name: 'device_type', type: 'nvarchar', length: 500 })
-    public deviceType: string;
+    @Column({ name: 'device_type_ids', type: 'nvarchar', length: 500 })
+    public deviceTypeIds: string;
 
-    @Column({ name: 'device_branch', type: 'nvarchar', length: 500 })
-    public deviceBranch: string;
+    @Column({ name: 'device_branches', type: 'nvarchar', length: 500 })
+    public deviceBranches: string;
 
     @Column({ name: 'started_at', type: 'bigint', nullable: true })
     public startedAt: number;
@@ -21,10 +22,15 @@ export class Voucher {
     @Column({ name: 'finished_at', type: 'bigint', nullable: true })
     public finishedAt: number;
 
-    @Column({ name: 'status', type: 'nvarchar', length: 50})
+    @Column({ name: 'status', type: 'nvarchar', length: 50, default: 'OPENING_SOON'})
     public status: string;
 
+    @Column({ name: 'image', type: 'nvarchar', length: 500, nullable: true})
+    public image: string;
+
     @Column({ name: 'off_value', type: 'integer' })
+    @Min(0)
+    @Max(100)
     public offValue: number;
 
     @Column({ name: 'off_string', type: 'nvarchar', length: 500 })

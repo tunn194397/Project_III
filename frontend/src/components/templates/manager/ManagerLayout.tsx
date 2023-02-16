@@ -11,12 +11,12 @@ export default function ManagerLayout() {
     };
     return (
         <WrapperAll>
-            <div>
+            <div className=''>
                 <Navbar />
-                <WrapperContent>
+                <WrapperContent className='fixed top-[8%]'>
                     <Sidebar  menuCollapse = {collapsed} setMenuCollapse = {handleCollapsedChange} />
                 </WrapperContent>
-                <div className='ml-[290px] h-full py-[40px] px-[15px]' >
+                <div className='fixed top-[8%] left-[200px] h-[92%] w-[87%] py-[30px] px-[20px] bg-gray-100 overflow-auto' >
                     <Outlet />
                 </div>
             </div>

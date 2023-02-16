@@ -1,17 +1,25 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, MinLength, Validate } from 'class-validator';
+import {IsEmail, IsNotEmpty, IsOptional, MinLength, Validate} from 'class-validator';
 import { IsNotExist } from 'src/shared/utils/validators/is_not_exists.validator';
 import { CreateUserRequestDTO } from './create_user.dto';
 
 export class UpdateUserRequestDTO {
   @ApiProperty({
     type: String,
-    example: 'Tran Kim Hung',
+    example: 'Tran Kim',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
-  fullName: string;
+  firstName: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Tran Kim',
+  })
+  @IsOptional()
+  @MinLength(1)
+  lastName: string;
 
   @ApiProperty({
     type: String,
@@ -19,13 +27,41 @@ export class UpdateUserRequestDTO {
   })
   @Transform(({ value }) => value?.toLowerCase().trim())
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   email: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: '0922456713',
+  })
+  @IsOptional()
+  phone: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'Vietnam',
+  })
+  @IsOptional()
+  nationality: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'tkh.img',
+  })
+  @IsOptional()
+  avatarImage: string | null;
+
+  @ApiProperty({
+    type: Number,
+    example: (new Date()).getTime(),
+  })
+  @IsOptional()
+  birthday: number | null;
 
   @ApiProperty({
     type: Number,
     example: 1,
   })
-  @IsNotEmpty()
+  @IsOptional()
   roleID?: number;
 }

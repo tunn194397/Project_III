@@ -1,9 +1,10 @@
 import {managerExtraRoute, managerRoute} from '../../../routes/ConstRoute';
 import { CollapseIconButton, collapseIcon, expandIcon, WrapperSideBar } from '../../../style/styled';
-import { FC } from 'react';
+import {FC, useContext} from 'react';
 import { ProSidebar, Menu, MenuItem, SubMenu, SidebarContent, SidebarFooter } from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
 import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../../../context/AuthContext";
 
 interface Props {
   menuCollapse: any;
@@ -13,59 +14,73 @@ interface Props {
 
 const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
   const navigate = useNavigate()
+  const { permission } = useContext(AuthContext);
+  const arrayRoute = managerRoute;
+    arrayRoute.map((route : any) => {
+      if (route.permission) route.able = permission?.includes(route.permission)? 1: 0;
+      else {
+          let count = 0;
+          route.subRoute.map((subRoute: any) => {
+              if (permission?.includes(subRoute.permission)) {
+                  subRoute.able = 1;
+                  count++;
+              }
+          })
+          route.able = (count > 0) ? 1: 0
+      }
+  })
   return (
-      <WrapperSideBar className="large-screen" style={{ width: !menuCollapse ? '290px' : '100px'}}>
-        <CollapseIconButton className={`${menuCollapse ? 'expand' : 'collapse'}`}>
-          <h1>NGOCTU COMPUTER</h1>
-          <img src={menuCollapse ? expandIcon : collapseIcon} alt="" onClick={() => setMenuCollapse()} />
-        </CollapseIconButton>
-
+      <WrapperSideBar style={{ width: !menuCollapse ? '200px' : '100px'}}>
         <ProSidebar collapsed={menuCollapse}>
           <SidebarContent
               style={{
-                marginTop: '20px',
+                marginTop: '5px',
               }}
           >
-              { managerRoute.map((item, index) =>
-                !item.subRoute.length ? (
-                    <Menu iconShape="square">
-                      <MenuItem
-                          active={item.path === window.location.pathname || (index === 0 && window.location.pathname === '/')}
-                          key = {item.path}
-                          icon={item.icon}
-                          onClick = {() => navigate(item.path || '')}
-                          style={{
-                            font: 'normal normal normal 16px',
-                          }}
-                      >
-                        {item.title}
-                      </MenuItem>
-                    </Menu>
-                ) : (
-                    <Menu>
-                      <SubMenu
-                          suffix={<span className="badge yellow"></span>}
-                          title={item.title}
-                          icon={item.icon}
-                          style={{
-                            font: 'normal normal normal 16px ',
-                            marginBottom: 10
-                          }}
-                      >
-                        {item.subRoute?.map((e) => (
+              { arrayRoute.map((item, index) =>
+                  (!item.subRoute.length) ? (
+                      (item.able) ?
+                        <Menu iconShape="square">
                             <MenuItem
-                                active={e.path === window.location.pathname}
-                                key={e.path}
-                                onClick = {() => navigate(e.path || '')}
+                                active={item.path === window.location.pathname || (index === 0 && window.location.pathname === '/')}
+                                key = {item.path}
+                                icon={item.icon}
+                                onClick = {() => navigate(item.path || '')}
                                 style={{
-                                  font: 'normal normal normal 16px ',
+                                    font: 'normal normal normal 12px'
                                 }}
                             >
-                              {e.title}
+                                {item.title}
                             </MenuItem>
-                        ))}
-                      </SubMenu>
-                    </Menu>
+                        </Menu> : ''
+                    )   : (
+                      (item.able) ?
+                        <Menu>
+                          <SubMenu
+                              suffix={<span className="badge yellow"></span>}
+                              title={item.title}
+                              icon={item.icon}
+                              style={{
+                                font: 'normal normal normal 12px ',
+                                marginBottom: 0
+                              }}
+                          >
+                            {item.subRoute?.map((e: any) => (
+                                (e.able) ?
+                                    <MenuItem
+                                        active={e.path === window.location.pathname}
+                                        key={e.path}
+                                        icon={e.icon}
+                                        onClick = {() => navigate(e.path || '')}
+                                        style={{
+                                          font: 'normal normal normal 12px ',
+                                        }}
+                                    >
+                                      {e.title}
+                                    </MenuItem> : ''
+                            ))}
+                          </SubMenu>
+                        </Menu>: ''
                 )
             )}
             {/* </Menu> */}
@@ -79,8 +94,7 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                       key={item.path}
                       icon={item.icon}
                       style={{
-                        font: 'normal normal normal 16px ',
-                        marginTop: 10
+                        font: 'normal normal normal 12px '
                       }}
                   >
                     {item.title}

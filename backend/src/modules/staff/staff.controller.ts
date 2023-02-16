@@ -1,14 +1,9 @@
 import {StaffService} from "./staff.service";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Roles} from "../roles/roles.decorator";
-import {RoleEnum} from "../roles/roles.enum";
-import {AuthGuard} from "@nestjs/passport";
-import {RolesGuard} from "../roles/roles.guard";
-import { Controller,  Get, Post, Body, Patch, Param, Delete, UseGuards, Query, DefaultValuePipe, ParseIntPipe, HttpStatus, HttpCode} from '@nestjs/common';
-import {FindUserDto} from "../../shared/request/findUser.dto";
+import {ApiBody, ApiParam, ApiTags} from "@nestjs/swagger";
+import { Controller,  Get, Post, Body, Param,  Query, HttpStatus, HttpCode} from '@nestjs/common';
 import {CreateStaffDto} from "./dto/createStaff.dto";
-import {UpdateStaffDto} from "./dto/updateStaff.dto";
-
+import {UpdateStaffDetailDto} from "./dto/updateStaffDetail.dto";
+import {FindStaffDto} from "./dto/findStaff.dto";
 
 @ApiTags('Staffs')
 @Controller({
@@ -20,8 +15,8 @@ export class StaffController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    getListStaffs(@Param()  findUserDto: FindUserDto) {
-        return this.staffService.getList(findUserDto)
+    getListStaffs(@Query()  findDto: FindStaffDto) {
+        return this.staffService.getList(findDto)
     }
 
     @Get(':id')
@@ -31,14 +26,17 @@ export class StaffController {
     }
 
     @Post()
+    @ApiBody({required: true, type: CreateStaffDto})
     @HttpCode(HttpStatus.CREATED)
-    createNewStaff(@Body('body') body: CreateStaffDto) {
+    createNewStaff(@Body() body: CreateStaffDto) {
         return this.staffService.createNewStaff(body.newUserDto, body.newStaffDto)
     }
 
     @Post(':id')
+    @ApiBody({required: true, type: UpdateStaffDetailDto})
+    @ApiParam({name: 'id', required: true, type: Number})
     @HttpCode(HttpStatus.OK)
-    updateStaffDetail(@Param('id') id: number, @Body('detail') detail: UpdateStaffDto) {
+    updateStaffDetail(@Param('id') id: number, @Body('') detail: UpdateStaffDetailDto) {
         return this.staffService.updateStaffDetail(id, detail)
     }
 }

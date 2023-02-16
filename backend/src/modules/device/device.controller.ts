@@ -24,8 +24,20 @@ export class DeviceController {
 
     @Get('/type/{:id}')
     @HttpCode(HttpStatus.OK)
-    getListCustomers(@Param() id: number) {
+    getListChildren(@Param() id: number) {
         return this.deviceService.getAllDeviceChildrenType(id)
+    }
+
+    @Get('/parameter/')
+    @HttpCode(HttpStatus.OK)
+    getListParameter(@Query('typeId') typeId: number) {
+        return this.deviceService.getAllDeviceParameterOfType(typeId);
+    }
+
+    @Get('/type-have-parameter/')
+    @HttpCode(HttpStatus.OK)
+    getListDeviceTypeHaveParameter() {
+        return this.deviceService.getAllDeviceTypeHaveParameter();
     }
 
 }

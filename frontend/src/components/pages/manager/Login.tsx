@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { adminLogin } from '../../../api/manager/account/request';
@@ -21,9 +21,10 @@ export default function ManagerLoginPage() {
     const onSubmit = async (data: any) => {
         const response = await adminLogin(data);
         if (response.success) {
-            const { token, user } = response.data.data;
+            const { token, user, permission } = response.data.data
+            console.log("Login: ", token, user, permission)
             toast.success(response.message);
-            setAuthData?.(token, user.roleId, user);
+            setAuthData?.(token, user.roleId, user, permission);
             navigate('/manager');
         } else {
             toast.error(response.message);

@@ -25,7 +25,7 @@ export const CollapseIconButton = styled.div`
 export const HeaderWrapper = styled.div`
   z-index: 1010;
   padding: 0px 0px 0px 0px;
-  height: 85px;
+  height: 8%;
   display: flex;
   justify-content: space-between;
   align-item: center;
@@ -58,14 +58,14 @@ export const UserMainHeaderWrapper = styled.div`
 
 export const WrapperSideBar = styled.div`
   position: absolute;
-  width: 290px;
+  width: 200px;
   transition: width 0.2s linear;
-  top: 72px;
+  top: 8%;
   @media screen and (max-width: 767px) {
     top: 85px;
   }
   .pro-sidebar {
-    height: calc(102vh - 87px);
+    height: calc(104vh - 87px);
     @media screen and (max-width: 767px) {
       height: 100vh;
     }
@@ -83,8 +83,8 @@ export const WrapperSideBar = styled.div`
         box-shadow: 0.5px 0.866px 2px 0px rgba(0, 0, 0, 0.15);
         border-radius: 10px;
         & li {
-          margin-left: 10px;
-          margin-right: 10px;
+          margin-left: 5px;
+          margin-right: 5px;
         }
         &::before {
           width: 0px;
@@ -97,12 +97,12 @@ export const WrapperSideBar = styled.div`
       padding-left: 0 !important;
       margin-top: 10px;
       .pro-menu-item {
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 3px;
+        padding-bottom: 3px;
         margin-left: 16px;
-        font-size: 16px;
+        font-size: 14px;
       }
     }
   }
@@ -114,10 +114,11 @@ export const WrapperSideBar = styled.div`
 
   .pro-menu {
     ul {
-      margin: 0 10px !important;
+      margin: 0 2px !important;
     }
 
     .pro-inner-list-item ul {
+      margin-left: 10px;
       margin-right: 0;
       &::before {
         content: '';
@@ -160,12 +161,12 @@ export const WrapperSideBar = styled.div`
         .pro-menu-item > .pro-inner-item {
           color: #ffffff;
           font-weight: 550;
-          padding: 10px 0 10px 10px !important;
+          padding: 5px 0 5px 5px !important;
         }
 
         .pro-sub-menu {
-          padding-right: 10px;
-          padding-left: 10px;
+          padding-right: 5px;
+          padding-left: 5px;
           .pro-inner-item {
             padding: 0 !important;
           }
@@ -225,15 +226,14 @@ export const WrapperAll= styled.div`
 `;
 
 export const WrapperContent = styled.div`
-  margin-top: 70px;
   .collapsem {
-    margin-left: 290px;
+    margin-left: 40px;
     @media screen and (max-width: 767px) {
       margin-left: 0;
     }
   }
   .no-collapsem {
-    margin-left: 50px;
+    margin-left: 40px;
     @media screen and (max-width: 767px) {
       margin-left: 0;
     }

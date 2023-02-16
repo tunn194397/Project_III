@@ -50,6 +50,14 @@ export class CreateUserRequestDTO {
 
   @ApiProperty({
     type: String,
+    example: '12345678',
+  })
+  @IsNotEmpty()
+  @MinLength(1)
+  phone: string;
+
+  @ApiProperty({
+    type: String,
     example: 'tunn@gmail.com',
   })
   @Transform(({ value }) => value?.toLowerCase().trim())

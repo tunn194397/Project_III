@@ -8,6 +8,9 @@ import * as bcrypt from 'bcrypt';
 import {RegisterRequestDTO} from './dto/request/register.dto';
 import {UpdatePasswordDTO} from './dto/request/update-password.dto';
 import {logger} from "../../shared/logger";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import {Role, RolePermission} from "../../database/entities";
 
 @Injectable()
 export class AuthService {
@@ -16,7 +19,7 @@ export class AuthService {
     private usersService: UsersService,
   ) {}
   //login
-  async validateLogin( loginDTO: LoginRequestDTO, role: string): Promise<{ token: string; user: User }> {
+  async validateLogin( loginDTO: LoginRequestDTO, role: string): Promise<{ token: string; user: User, permission: any}> {
     const user = await this.usersService.findOne({ username: loginDTO.username});
     console.log("user: ", user)
     if ( !user ||
@@ -35,14 +38,17 @@ export class AuthService {
       user.passwordHash,
     );
 
+
     if (isValidPassword) {
+      const permission = await this.usersService.getPermissionOfUser(user.id)
       console.log(user.id, user.roleId)
       const token = this.jwtService.sign({
         id: user.id,
         role: user.roleId,
+        permission: permission
       });
 
-      return { token, user: user };
+      return { token, user: user, permission: permission };
     } else {
       throw new HttpException(
         {
@@ -123,5 +129,9 @@ export class AuthService {
 
   async softDelete(user: User): Promise<void> {
     await this.usersService.softDelete(user.id);
+  }
+
+  async getPermissionOfUser(userId: number ) : Promise<any> {
+    return await this.usersService.getPermissionOfUser(userId)
   }
 }

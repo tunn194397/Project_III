@@ -14,7 +14,7 @@ export class UpdateManagerDto {
         type: String,
         example: 'Certificate'
     })
-    certificate: string;
+    certificates: string;
 
     @ApiProperty({
         type: String,

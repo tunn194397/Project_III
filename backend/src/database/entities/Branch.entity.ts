@@ -9,6 +9,9 @@ export class Branch {
     @Column({ name: 'cooperation_id', type: 'int' })
     public cooperationId: number;
 
+    @Column({ name: 'name', type: 'nvarchar'})
+    public name: string;
+
     @Column({ name: 'address', type: 'nvarchar'})
     public address: string;
 

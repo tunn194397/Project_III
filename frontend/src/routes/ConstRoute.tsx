@@ -14,6 +14,17 @@ import ManagerHelp from "../components/pages/manager/Help";
 import ManagerItem from "../components/pages/manager/items/Item";
 import ManagerPermission from "../components/pages/manager/Permission";
 import ManagerVoucher from "../components/pages/manager/Voucher";
+import ManagerCustomerDetail from "../components/pages/manager/detail/CustomerDetail";
+import ManagerManagerDetail from "../components/pages/manager/detail/ManagerDetail";
+import ManagerStaffDetail from "../components/pages/manager/detail/StaffDetail";
+import ManagerCreateItem from "../components/pages/manager/createPage/CreateItem";
+import ManagerSupplyDetail from "../components/pages/manager/detail/SupplyDetail";
+import ManagerItemDetail from "../components/pages/manager/detail/ItemDetail";
+import ManagerCreateSellReceipt from "../components/pages/manager/createPage/CreateSellReceipt";
+import ManagerVoucherDetail from "../components/pages/manager/detail/VoucherDetail";
+import ManagerCreateImportReceipt from "../components/pages/manager/createPage/CreateImportReceipt";
+import ManagerImportReceiptDetail from "../components/pages/manager/detail/ImportReceiptDetail";
+import ManagerSellReceiptDetail from "../components/pages/manager/detail/SellReceiptDetail";
 export const userRoute = [
     {
         title: 'Home',
@@ -28,7 +39,9 @@ export const managerRoute = [
         path: '/manager',
         icon: IMAGES.icon.home,
         subRoute: [],
-        element: <ManagerHome/>
+        element: <ManagerHome/>,
+        permission: 'MANAGER_HOME_VIEW',
+        able : 0
     },
     {
         title: 'Employee',
@@ -38,39 +51,49 @@ export const managerRoute = [
             {
                 title: 'Managers',
                 path: '/manager/employees/managers',
-                icon: '',
-                element: <ManagerManager/>
+                icon: IMAGES.icon.personal,
+                element: <ManagerManager/>,
+                permission: 'MANAGER_MANAGER_VIEW',
+                able : 0
             },
             {
                 title: 'Staffs',
                 path: '/manager/employees/staffs',
-                icon: '',
-                element: <ManagerStaffs/>
+                icon: IMAGES.icon.personal,
+                element: <ManagerStaffs/>,
+                permission: 'MANAGER_STAFF_VIEW',
+                able : 0
             },
         ]
     },
     {
-        title: 'Items Management',
+        title: 'Items',
         path: '/manager/items',
         icon: IMAGES.icon.item,
         subRoute: [
             {
-                title: 'Supply receipts',
+                title: 'Supply',
                 path: '/manager/items/supply',
-                icon: '',
-                element: <ManagerSupplyReceipt/>
+                icon: IMAGES.icon.importIcon,
+                element: <ManagerSupplyReceipt/>,
+                permission: 'MANAGER_SUPPLY_VIEW',
+                able : 0
             },
             {
-                title: 'Sell receipts',
+                title: 'Sell',
                 path: '/manager/items/sell',
-                icon: '',
-                element: <ManagerSellReceipt/>
+                icon: IMAGES.icon.sellIcon,
+                element: <ManagerSellReceipt/>,
+                permission: 'MANAGER_SELL_VIEW',
+                able : 0
             },
             {
                 title: 'Items',
                 path: '/manager/items/items',
-                icon: '',
-                element:  <ManagerItem/>
+                icon: IMAGES.icon.itemIcon,
+                element:  <ManagerItem/>,
+                permission: 'MANAGER_ITEM_VIEW',
+                able : 0
             }
         ]
     },
@@ -79,35 +102,45 @@ export const managerRoute = [
         path: '/manager/supply',
         icon: IMAGES.icon.supply,
         subRoute: [],
-        element: <ManagerSupply/>
+        element: <ManagerSupply/>,
+        permission: 'MANAGER_SUPPLY_VIEW',
+        able : 0
     },
     {
         title: 'Customers',
         path: '/manager/customers',
         icon: IMAGES.icon.customer,
         subRoute: [],
-        element: <ManagerCustomer/>
+        element: <ManagerCustomer/>,
+        permission: 'MANAGER_CUSTOMER_VIEW',
+        able : 0
     },
     {
         title: 'Warehouse',
         path: '/manager/warehouse',
         icon: IMAGES.icon.warehouse,
         subRoute: [],
-        element: <ManagerWarehouse/>
+        element: <ManagerWarehouse/>,
+        permission: 'MANAGER_WAREHOUSE_VIEW',
+        able : 0
     },
     {
-        title: 'Sale off and Voucher' ,
+        title: 'Vouchers' ,
         path: '/manager/voucher',
-        icon: IMAGES.icon.warehouse,
+        icon: IMAGES.icon.voucher,
         subRoute: [],
-        element: <ManagerVoucher/>
+        element: <ManagerVoucher/>,
+        permission: 'MANAGER_VOUCHER_VIEW',
+        able : 0
     },
     {
         title: 'Permission',
         path: '/manager/permission',
-        icon: IMAGES.icon.warehouse,
+        icon: IMAGES.icon.permission,
         subRoute: [],
-        element: <ManagerPermission/>
+        element: <ManagerPermission/>,
+        permission: 'MANAGER_PERMISSION_VIEW',
+        able : 0
     },
 ]
 
@@ -133,4 +166,51 @@ export const managerExtraRoute = [
         subRoute: [],
         element: <ManagerHelp/>
     },
+]
+
+export const managerDetailRoute = [
+    {
+        path: '/manager/customers/:id',
+        element: <ManagerCustomerDetail/>
+    },
+    {
+        path: '/manager/employees/managers/:id',
+        element: <ManagerManagerDetail/>
+    },
+    {
+        path: '/manager/employees/staffs/:id',
+        element: <ManagerStaffDetail/>
+    },
+    {
+        path: '/manager/supply/:id',
+        element: <ManagerSupplyDetail/>
+    },
+    {
+        path: '/manager/items/items/:id',
+        element: <ManagerItemDetail/>
+    },
+    {
+        path: '/manager/voucher/:id',
+        element: <ManagerVoucherDetail/>
+    },
+    {
+        path: '/manager/items/supply/:id',
+        element: <ManagerImportReceiptDetail/>
+    },
+    {
+        path: '/manager/items/sell/:id',
+        element: <ManagerSellReceiptDetail/>
+    },
+    {
+        path: '/manager/items/items/create',
+        element: <ManagerCreateItem/>
+    },
+    {
+        path: '/manager/items/sell/create',
+        element: <ManagerCreateSellReceipt/>
+    },
+    {
+        path: '/manager/items/supply/create',
+        element: <ManagerCreateImportReceipt/>
+    }
 ]

@@ -1,11 +1,9 @@
 import {ManagerService} from "./manager.service";
-import {ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post} from "@nestjs/common";
-import {FindUserDto} from "../../shared/request/findUser.dto";
-import {NewManagerDto} from "./dto/newManager.dto";
-import {NewUserDto} from "./dto/newUser.dto";
-import {UpdateManagerDto} from "./dto/updateManager.dto";
+import {ApiBody, ApiParam, ApiTags} from "@nestjs/swagger";
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query} from "@nestjs/common";
 import {CreateManagerDto} from "./dto/createManager.dto";
+import {FindDto} from "../../helper/dto/find.dto";
+import {UpdateManagerDetailDto} from "./dto/updateManagerDetail.dto";
 
 @ApiTags('Managers')
 @Controller({
@@ -17,10 +15,16 @@ export class ManagerController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    getListManager(@Param() getManagersDto: FindUserDto) {
-        return this.managerService.getListManager(getManagersDto)
+    getListManagerWithSearch(@Query('') getManagersDto: FindDto) {
+        return this.managerService.getListManagerWithSearch(getManagersDto)
     }
 
+    @Get("/branch")
+    @HttpCode(HttpStatus.OK)
+    getAllBranches() {
+        return this.managerService.getAllBranches();
+    }
+    
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     getManagerDetail(@Param('id') id: number) {
@@ -28,14 +32,19 @@ export class ManagerController {
     }
 
     @Post()
+    @ApiBody({required: true, type: CreateManagerDto})
     @HttpCode(HttpStatus.CREATED)
-    createManager(@Body('body') body: CreateManagerDto) {
+    createManager(@Body() body: CreateManagerDto) {
+        console.log(body)
         return this.managerService.createNewManager(body.newUserDto, body.newManagerDto)
     }
 
+
     @Post(':id')
+    @ApiBody({required: true, type: UpdateManagerDetailDto})
+    @ApiParam({name: 'id', required: true, type: Number})
     @HttpCode(HttpStatus.OK)
-    updateManagerDetail(@Param('id') id: number, @Body() updateManagerDto: UpdateManagerDto) {
-        return this.managerService.updateManagerDetail(id, updateManagerDto)
+    updateManagerDetail(@Param('id') id: number, @Body() detail: UpdateManagerDetailDto) {
+        return this.managerService.updateManagerDetail(id, detail)
     }
 }

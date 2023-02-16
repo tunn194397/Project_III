@@ -1,44 +1,22 @@
 import {FC} from "react";
+import SearchBar from "./SearchBar";
+import Pagination from "./Pagination";
+import TableData from "./TableData";
 
 interface Props {
     headers: any;
-    datas: any;
+    data: any;
+    pagination: any;
+    filterArray: any;
+    setSearchQuery: any;
+    setOpenAdd: any
 }
 
-const TableComponent: FC<Props> = ({ headers, datas}) => {
+const TableComponent: FC<Props> = ({ headers, data, pagination, filterArray, setSearchQuery, setOpenAdd}) => {
     return (
-        <div className = ' flex items-center w-full bg-white rounded-md mt-7 px-2 py-2'>
-            <table className='w-full m-2 rounded-md '>
-                <thead className='uppercase bg-blue-400 '>
-                    <tr>
-                        {
-                            headers.map((header: any, index: number) => {
-                                return (<th scope="col" className="py-2 px-2 border" key={'header -' + index} style={{width: `${header.width}%`}}>
-                                    {header.title}
-                                </th>)
-                            })
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        datas.map((data: any, index: number) => {
-                            return (
-                                <tr key={index} className='bg-white hover:bg-gray-100'>
-                                    {data.map((e: any, indexOfData: number) => {
-                                        return (<td scope="col" className="py-2 px-2 border" key={index + '-' + indexOfData}>
-                                            {e}
-                                        </td>)
-                                    })}
-                                    <td  scope="col" className="py-3 px-6 border">
-                                        <button className='bg-blue-500 px-2 py-1 rounded font-semibold text-white  hover:bg-blue-600'> Detail </button>
-                                    </td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
+        <div className = 'flex flex-col bg-white mt-3 py-6 space-y-8 rounded-xl border-[1px] border-gray-300 '>
+            <SearchBar filterArray={filterArray} setOpenAdd={setOpenAdd}/>
+            <TableData headers={headers} data={data} pagination={pagination} setSearchQuery={setSearchQuery} ></TableData>
         </div>
     );
 }

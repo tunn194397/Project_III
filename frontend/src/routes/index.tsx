@@ -1,6 +1,7 @@
 import ManagerLoginPage from "../components/pages/manager/Login";
 import ManagerLayout from "../components/templates/manager/ManagerLayout";
-import {managerExtraRoute, managerRoute, userRoute} from "./ConstRoute";
+import {managerDetailRoute, managerExtraRoute, managerRoute, userRoute} from "./ConstRoute";
+import {element} from "prop-types";
 
 
 const managerChildren: any[] = [], userChildren: any[] = [];
@@ -32,6 +33,10 @@ userRoute.map((e: any) => {
     else userChildren.push({path: e.path, element: e.element})
 })
 userChildren.push({path: '*', element: <div>This url is incorrect</div>})
+
+managerDetailRoute.map((e: any) => {
+    managerChildren.push({path: e.path, element: e.element})
+})
 
 export const routes = [
     {

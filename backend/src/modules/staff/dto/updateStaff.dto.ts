@@ -11,10 +11,10 @@ export class UpdateStaffDto {
     branchID: number;
 
     @ApiProperty({
-        type: String,
-        example: '20/10/2022'
+        type: Number,
+        example: new Date('20/10/2022').getTime()
     })
-    firstWorkedDate: string;
+    firstWorkedDate: number;
 
     @ApiProperty({
         type: String,

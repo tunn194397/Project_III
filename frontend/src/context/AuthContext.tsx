@@ -22,7 +22,8 @@ interface IAuthContext {
   roleId: number | null;
   isLogin: boolean | null;
   user: IUser | null;
-  setAuthData?: (token: string, roleId: number, user: IUser) => void;
+  permission: any | null;
+  setAuthData?: (token: string, roleId: number, user: IUser, permission: any) => void;
   clearAuthData?: () => void;
   setTokenRefresh?: () => void;
 }
@@ -31,7 +32,8 @@ const defaultAuthContext: IAuthContext = {
   token: '',
   roleId: -1,
   isLogin: false,
-  user: null
+  user: null,
+  permission: null
 };
 
 export const AuthContext = createContext<IAuthContext>(defaultAuthContext);
@@ -41,6 +43,7 @@ export const AuthProvider: FC<any> = ({ children }) => {
   const [roleId, setRoleId] = useState<number>(parseInt(localStorage.getItem('roleId') !== null ? localStorage.getItem('roleId')! : '0'));
   const [isLogin, setIsLogin] = useState<boolean | null>(localStorage.getItem('isLogin') === 'true');
   const [user, setUser] = useState<IUser | null>(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null);
+  const [permission, setPermission] = useState<any | null>(localStorage.getItem('permission') ? JSON.parse(localStorage.getItem('permission')!) : null);
 
   const setTokenRefresh = () => {
     const roleId = localStorage.getItem('roleId') !== null ? localStorage.getItem('roleId')! : '0';
@@ -48,6 +51,7 @@ export const AuthProvider: FC<any> = ({ children }) => {
     setToken(localStorage.getItem('token'));
     setIsLogin(localStorage.getItem('isLogin') === 'true');
     setUser(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null);
+    setPermission(localStorage.getItem('permission') ? JSON.parse(localStorage.getItem('permission')!) : null)
   };
 
   useEffect(() => {
@@ -56,17 +60,20 @@ export const AuthProvider: FC<any> = ({ children }) => {
     setRoleId(parseInt(roleId));
     setIsLogin(localStorage.getItem('isLogin') === 'true');
     setUser(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null);
+    setPermission(localStorage.getItem('permission') ? JSON.parse(localStorage.getItem('permission')!) : null);
   }, [token]);
 
-  const setAuthData = (token: string, roleId: number, user: any) => {
+  const setAuthData = (token: string, roleId: number, user: any, permission: any) => {
     localStorage.setItem('token', token);
     localStorage.setItem('roleId', JSON.stringify(roleId));
     localStorage.setItem('isLogin', JSON.stringify(true));
     localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('permission', JSON.stringify(permission))
     setToken(token);
     setIsLogin(true);
     setRoleId(roleId);
     setUser(user);
+    setPermission(permission)
   };
   const clearAuthData = () => {
     localStorage.clear();
@@ -74,6 +81,7 @@ export const AuthProvider: FC<any> = ({ children }) => {
     setRoleId(-1);
     setToken('');
     setUser(null);
+    setPermission(null)
   };
 
   const contextData = {
@@ -81,6 +89,7 @@ export const AuthProvider: FC<any> = ({ children }) => {
     roleId,
     isLogin,
     user,
+    permission,
     setAuthData,
     clearAuthData,
     setTokenRefresh

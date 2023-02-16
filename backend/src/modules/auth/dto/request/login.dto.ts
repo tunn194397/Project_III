@@ -4,14 +4,14 @@ import { IsNotEmpty } from 'class-validator';
 export class LoginRequestDTO {
   @ApiProperty({
     type: String,
-    example: 'tunn',
+    example: 'superAdmin',
   })
   @IsNotEmpty()
   username: string;
 
   @ApiProperty({
     type: String,
-    example: 'password',
+    example: '123456',
   })
   @IsNotEmpty()
   password: string;
