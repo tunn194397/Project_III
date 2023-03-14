@@ -39,6 +39,18 @@ export class User {
   @Column({ name: 'birthday', type: 'bigint', nullable: true})
   public birthday: number;
 
+  @Column({ name: 'bank_name', type: 'nvarchar', length: 150, nullable: true})
+  public bankName: string;
+
+  @Column({ name: 'bank_account', type: 'nvarchar', length: 150, nullable: true})
+  public bankAccount: string;
+
+  @Column({ name: 'bank_owner', type: 'nvarchar', length: 150, nullable: true})
+  public bankOwner: string;
+
+  @Column({ name: 'address', type: 'nvarchar', length: 150, nullable: true})
+  public address: string;
+
   @Column({name: 'role_id', type: 'int', default: 6} )
   public roleId: number;
 

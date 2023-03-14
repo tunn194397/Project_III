@@ -12,6 +12,9 @@ export class SellItemReceipt {
     @Column({ name: 'quantity', type: 'int' })
     public quantity: number;
 
+    @Column({name: 'voucher_id', type: 'int', nullable: true})
+    public voucherId: number;
+
     @Column({ name: 'sell_receipt_id', type: 'int' })
     public sellReceiptId: number;
 

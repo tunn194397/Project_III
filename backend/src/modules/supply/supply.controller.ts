@@ -9,8 +9,9 @@ import {NewSupplyDto} from "./dto/CreateSupply.dto";
 import {UpdateSupplyDto} from "./dto/UpdateSupply.dto";
 import {Causes} from "../../config/exception/causes";
 
+
 @ApiBearerAuth()
-@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager)
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Supply')
 @Controller({
@@ -56,7 +57,6 @@ export class SupplyController {
     @ApiBody({required: true, type: NewSupplyDto})
     @HttpCode(HttpStatus.CREATED)
     create(@Body() body: NewSupplyDto) {
-        console.log("BODY: ", body)
         const result = this.supplyService.create(body)
         if (!result) throw Causes.USER_ERROR;
         else return result

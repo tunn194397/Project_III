@@ -3,6 +3,7 @@ export enum RoleEnum {
   'superManager' = 2,
   'supplyManager' = 3,
   'sellManager' = 4,
-  'staff' = 5,
+  'sellStaff' = 5,
   'user' = 6,
+  'supplyStaff'=8
 }

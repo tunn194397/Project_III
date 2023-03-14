@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {IMAGES} from "../../../../utils/images/images";
 import InfoDetail from "../../../atoms/InfoDetail";
-import {getDetailCustomer, getList} from "../../../../api/manager/customer/request";
+import {getDetailCustomer, getList, updateCustomer as updateCustomerDetail} from "../../../../api/manager/customer/request";
 import {toast} from "react-toastify";
 import {AuthContext} from "../../../../context/AuthContext";
 
@@ -65,35 +65,44 @@ export default function ManagerCustomerDetail() {
     }
 
     const updateCustomer= async (body: any) => {
-        console.log("body", body)
+        body.updateUser.birthday = (body.updateUser.birthday).getTime()
+        const updateResult = await updateCustomerDetail(token, Number(id), body)
+        if (updateResult.meta.code === 200) {
+            toast.success("Update customer information successful!")
+        }
+        else toast.error("Update customer information unsuccessful!")
     }
 
     const getData = (customer: any) => {
         const data = [
             {
-                domain: "User personal information",
+                domain: "updateUser", domainTitle: "User personal information",
                 fields:  [
                     {field: "avatarImage", editable: false, name: "id", label: "Avatar", type: 'image', defaultValue: customer.avatarImage},
-                    {field: "name", editable: false, name: "fullName", label: "Full name", type: 'input', defaultValue: customer.name},
+                    {field: "fullName", editable: false, name: "fullName", label: "Full name", type: 'input', defaultValue: customer.name},
                     {field: "firstName", editable: true, name: "firstName", label: "First name", type: 'input',  defaultValue: customer.firstName},
                     {field: "lastName", editable: true, name: "lastName", label: "Last name", type: 'input', defaultValue: customer.lastName},
                     {field: "email", editable: true, name: "email", label: "Customer email", type: 'input', defaultValue: customer.email},
                     {field: "phone", editable: true, name: "phone", label: "Customer phone number", type: 'input', defaultValue: customer.phone},
                     {field: "nationality", editable: true, name: "nationality", label: "Nationality", type: 'input', defaultValue: customer.nationality || 'Vietnamese'},
+                    {field: "bankName", editable: true, name: "bankName", label: "Bank name", type: 'input', defaultValue: customer.bankName},
+                    {field: "bankAccount", editable: true, name: "bankAccount", label: "Bank account", type: 'input', defaultValue: customer.bankAccount},
+                    {field: "bankOwner", editable: true, name: "bankOwner", label: "Bank owner", type: 'input', defaultValue: customer.bankOwner},
+                    {field: "address", editable: true, name: "address", label: "Address", type: 'input', defaultValue: customer.address},
                     {field: "birthday", editable: true, name: "birthday", label: "Birthday", type: 'inputTime', defaultValue: new Date(Number(customer.birthday))},
                     {field: "status", editable: true, name: "status", label: "Status", type: 'select', options: statusOptions,
                         defaultValue: statusOptions.find((c: any) => c.value === customer.status)
-                    }
+                    },
                 ]
             },
             {
-                domain: "Customer additional information",
+                domain: "updateCustomer", domainTitle: "Customer additional information",
                 fields: [
-                    {field: "registerType", editable: true, name: "registerType", label: "Register type", type: 'select', options: registerTypeOptions,
+                    {field: "registerType", editable: false, name: "registerType", label: "Register type", type: 'select', options: registerTypeOptions,
                         defaultValue: registerTypeOptions.find((c: any) => c.value === customer.customer.registerType)
                     },
-                    {field: "registerStaffId", editable: true, name: "registerStaffId", label: "Register Staff/Manager Id", type: 'input', defaultValue: customer.customer.registerStaffId},
-                    {field: "level", editable: true, name: "level", label: "Customer level", type: 'select', options: levelOptions,
+                    {field: "registerStaffId", editable: false, name: "registerStaffId", label: "Register Staff/Manager Id", type: 'input', defaultValue: customer.customer.registerStaffId},
+                    {field: "level", editable: false, name: "level", label: "Customer level", type: 'select', options: levelOptions,
                         defaultValue: levelOptions.find((c: any) => c.value === customer.customer.level)
                     },
                     {field: "score", editable: false, name: "score", label: "Score", type: 'input', defaultValue: String(customer.customer.score)},

@@ -7,10 +7,6 @@ import {LoginRequestDTO} from './dto/request/login.dto';
 import * as bcrypt from 'bcrypt';
 import {RegisterRequestDTO} from './dto/request/register.dto';
 import {UpdatePasswordDTO} from './dto/request/update-password.dto';
-import {logger} from "../../shared/logger";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Role, RolePermission} from "../../database/entities";
 
 @Injectable()
 export class AuthService {
@@ -21,10 +17,9 @@ export class AuthService {
   //login
   async validateLogin( loginDTO: LoginRequestDTO, role: string): Promise<{ token: string; user: User, permission: any}> {
     const user = await this.usersService.findOne({ username: loginDTO.username});
-    console.log("user: ", user)
     if ( !user ||
         (user && !(role === 'MANAGER' ? [RoleEnum.supplyManager, RoleEnum.superAdmin, RoleEnum.sellManager, RoleEnum.superManager]
-            : ((role === 'STAFF' ? [RoleEnum.staff]
+            : ((role === 'STAFF' ? [RoleEnum.sellStaff, RoleEnum.supplyStaff]
                 : [RoleEnum.user])).includes(user.roleId)))) {
       throw new HttpException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -41,7 +36,6 @@ export class AuthService {
 
     if (isValidPassword) {
       const permission = await this.usersService.getPermissionOfUser(user.id)
-      console.log(user.id, user.roleId)
       const token = this.jwtService.sign({
         id: user.id,
         role: user.roleId,

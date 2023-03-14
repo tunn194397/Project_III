@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {IGetListItem, ICreateItem} from "./types";
+import {IGetListItem, ICreateItem, IUpdateTotalItem} from "./types";
 const baseAdminURL = `${process.env.REACT_APP_BE_HOST}`;
 
-export const getListItems = async (token: string | null, props: IGetListItem) => {
+export const getListItems = async (token: string | null, props: IGetListItem | null) => {
     try {
         const result = await axios.get(`${baseAdminURL}items`, {
             params: props,
@@ -174,6 +174,41 @@ export const getDetailItem = async (token: string | null, id: number) => {
                 data: null,
                 message: message
             };
+        } else {
+            return {
+                success: false,
+                message: 'Network error',
+                data: null
+            };
+        }
+    }
+}
+
+export const updateItem = async (token: string | null, id: number, data: IUpdateTotalItem) => {
+    try {
+        const result = await axios.post(`${baseAdminURL}items/${id}`,data, {
+            headers: {
+                accept: 'application/json',
+                authorization: `Bearer ${token}`,
+                'content-type': 'application/json'
+            }
+        });
+        return result.data
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            if (error?.response?.status === 401) {
+                return {
+                    success: false,
+                    data: null,
+                    message: 'Unauthorized'
+                };
+            } else {
+                return {
+                    success: false,
+                    data: null,
+                    message: 'Failed to create data!'
+                };
+            }
         } else {
             return {
                 success: false,

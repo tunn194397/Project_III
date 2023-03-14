@@ -25,13 +25,16 @@ import ManagerVoucherDetail from "../components/pages/manager/detail/VoucherDeta
 import ManagerCreateImportReceipt from "../components/pages/manager/createPage/CreateImportReceipt";
 import ManagerImportReceiptDetail from "../components/pages/manager/detail/ImportReceiptDetail";
 import ManagerSellReceiptDetail from "../components/pages/manager/detail/SellReceiptDetail";
+import UserLoginPage from "../components/pages/user/UserLogin";
+import UserItemDetail from "../components/pages/user/ItemDetail";
+import UserMainPage from "../components/organisms/user/UserMainPage";
+import UserCart from "../components/pages/user/Cart";
 export const userRoute = [
     {
         title: 'Home',
-        path: '/user/',
-        subRoute: [],
-        element: <UserHome/>
-    },
+        path: '/user',
+        element: <UserMainPage/>
+    }
 ]
 export const managerRoute = [
     {
@@ -67,9 +70,9 @@ export const managerRoute = [
         ]
     },
     {
-        title: 'Items',
+        title: 'Receipts',
         path: '/manager/items',
-        icon: IMAGES.icon.item,
+        icon: IMAGES.icon.receipt,
         subRoute: [
             {
                 title: 'Supply',
@@ -85,14 +88,6 @@ export const managerRoute = [
                 icon: IMAGES.icon.sellIcon,
                 element: <ManagerSellReceipt/>,
                 permission: 'MANAGER_SELL_VIEW',
-                able : 0
-            },
-            {
-                title: 'Items',
-                path: '/manager/items/items',
-                icon: IMAGES.icon.itemIcon,
-                element:  <ManagerItem/>,
-                permission: 'MANAGER_ITEM_VIEW',
                 able : 0
             }
         ]
@@ -116,12 +111,12 @@ export const managerRoute = [
         able : 0
     },
     {
-        title: 'Warehouse',
-        path: '/manager/warehouse',
-        icon: IMAGES.icon.warehouse,
+        title: 'Items',
+        path: '/manager/items/items',
+        icon: IMAGES.icon.item,
         subRoute: [],
-        element: <ManagerWarehouse/>,
-        permission: 'MANAGER_WAREHOUSE_VIEW',
+        element:  <ManagerItem/>,
+        permission: 'MANAGER_ITEM_VIEW',
         able : 0
     },
     {
@@ -212,5 +207,16 @@ export const managerDetailRoute = [
     {
         path: '/manager/items/supply/create',
         element: <ManagerCreateImportReceipt/>
+    }
+]
+
+export const userDetailRoute = [
+    {
+        path: '/user/items/:id',
+        element: <UserItemDetail/>
+    },
+    {
+        path: '/user/cart',
+        element: <UserCart/>
     }
 ]

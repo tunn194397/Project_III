@@ -1,11 +1,18 @@
 import {StaffService} from "./staff.service";
-import {ApiBody, ApiParam, ApiTags} from "@nestjs/swagger";
-import { Controller,  Get, Post, Body, Param,  Query, HttpStatus, HttpCode} from '@nestjs/common';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiTags} from "@nestjs/swagger";
+import {Controller, Get, Post, Body, Param, Query, HttpStatus, HttpCode, UseGuards} from '@nestjs/common';
 import {CreateStaffDto} from "./dto/createStaff.dto";
 import {UpdateStaffDetailDto} from "./dto/updateStaffDetail.dto";
 import {FindStaffDto} from "./dto/findStaff.dto";
+import {Roles} from "../roles/roles.decorator";
+import {RoleEnum} from "../roles/roles.enum";
+import {AuthGuard} from "@nestjs/passport";
+import {RolesGuard} from "../roles/roles.guard";
 
 @ApiTags('Staffs')
+@ApiBearerAuth()
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller({
     path: 'staffs',
     version: '1',

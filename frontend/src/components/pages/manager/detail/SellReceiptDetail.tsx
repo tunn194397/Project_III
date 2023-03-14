@@ -3,6 +3,9 @@ import {useNavigate, useParams} from "react-router-dom";
 import {IMAGES} from "../../../../utils/images/images";
 import {AuthContext} from "../../../../context/AuthContext";
 import {getDetailSellReceipt} from "../../../../api/manager/item/sell/request";
+import InputItem from "../../../atoms/InputItem";
+import {Controller} from "react-hook-form";
+import Select from "react-select";
 
 
 export default function ManagerSellReceiptDetail() {
@@ -15,8 +18,8 @@ export default function ManagerSellReceiptDetail() {
         finalPrice: 0,
         items: [],
         note: '',
-        customer: {fullName: ''},
-        staff: {fullName: ''},
+        customer: {fullName: '', email: '', address: '', avatarImage: '', bankName: '', bankAccount: '', bankOwner: ''},
+        staff: {fullName: '', id: 0},
         totalPrice: 0,
         updatedAt: 0,
         saleOff: 0
@@ -46,65 +49,110 @@ export default function ManagerSellReceiptDetail() {
                 </button>
                 <div className='text-2xl text-black font-bold'>Sell Receipt Information</div>
             </div>
-            <div className='bg-white flex flex-col px-10 py-10 w-full space-y-14 border-2 border-gray-200 rounded-lg'>
+            <div className='overflow-y-auto space-y-28 px-14 py-10 bg-white border-2 border-gray-200 rounded-lg'>
                 <div className='flex flex-col space-y-5'>
-                    <div className="text-lg font-semibold underline"> Receipt Detail </div>
-                    <div className='grid grid-cols-3 space-y-2 px-4 items-center w-1/2'>
-                        <div className='col-span-1 font-semibold'>Content:</div>
-                        <div className='col-span-2'>{data.content}</div>
-
-                        <div className='col-span-1 font-semibold'>Time:</div>
-                        <div className='col-span-2'>{new Date(Number(data.createdAt)).toLocaleString()}</div>
-
-                        <div className='col-span-1 font-semibold'>Note:</div>
-                        <div className='col-span-2'>{data.note}</div>
-
-                        <div className='col-span-1 font-semibold'>Sale Off:</div>
-                        <div className='col-span-2'>{data.saleOff + " %"}</div>
-
-                        <div className='col-span-1 font-semibold'>Total Price:</div>
-                        <div className='col-span-2'> {data.totalPrice?.toLocaleString() + " VND"}</div>
-
-                        <div className='col-span-1 font-semibold'>Final Price:</div>
-                        <div className='col-span-2'>{data.finalPrice?.toLocaleString() + " VND"}</div>
-
-                        <div className='col-span-1 font-semibold'>Customer:</div>
-                        <div className='col-span-2'>{data.customer.fullName}</div>
-
-                        <div className='col-span-1 font-semibold'>Staff:</div>
-                        <div className='col-span-2'>{data.staff.fullName}</div>
-                    </div>
-                </div>
-                <hr/>
-                <div className='flex flex-col space-y-5'>
-                    <div className="text-lg font-semibold underline"> Item Sole in Receipt </div>
-                    <div className='grid grid-cols-3 gap-3'>
-                        {
-                            data.items.map((e: any) => {
-                                return (
-                                    <div className='grid grid-cols-4 border-2 border-gray-200 rounded-md space-x-3 px-2 py-2' key={e.id}>
-                                        <div className='flex flex-col col-span-3'>
-                                            <div> Item </div>
-                                            <input
-                                                className="border rounded w-full py-2 px-3 text-gray-700 outline-none text-sm focus:border-blue-500 focus:border-2"
-                                                type="text"
-                                                defaultValue={e.name}
-                                                disabled={true}
-                                            />
+                    <div className='flex flex-col bg-white space-y-5 '>
+                        <div className='grid grid-cols-4'>
+                            <div className='flex flex-col space-y-2 col-span-3'>
+                                <div className='text-xl underline font-bold mb-5 '>Receipt main information</div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Content: </div>
+                                    <div className='col-span-5'> {data.content}</div>
+                                </div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Customer: </div>
+                                    <div className='col-span-5'> {data.customer.fullName} ({data.customer.email})</div>
+                                </div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Customer addr: </div>
+                                    <div className='col-span-5'> {data.customer.address}</div>
+                                </div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Bank account: </div>
+                                    <div className='col-span-5'>
+                                        <div className='font-semibold'>
+                                            {data.customer.bankOwner}
                                         </div>
-                                        <div className='flex flex-col col-span-1'>
-                                            <div> Quantity </div>
-                                            <input
-                                                className="border rounded w-full py-2 px-3 text-gray-700 outline-none text-sm focus:border-blue-500 focus:border-2"
-                                                type="text"
-                                                defaultValue={e.quantity}
-                                                disabled={true}
-                                            />
+                                        <div >
+                                            {data.customer.bankAccount} {data.customer.bankName? (' (' + data.customer.bankAccount + ')'): ''}
                                         </div>
+
                                     </div>
-                                )
-                            })
-                        }
+                                </div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Time: </div>
+                                    <div className='col-span-5'> {new Date(Number(data.createdAt)).toLocaleString()}</div>
+                                </div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Note: </div>
+                                    <div className='col-span-5'> {data.note}</div>
+                                </div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Total price: </div>
+                                    <div className='col-span-5'> {data.totalPrice.toLocaleString() + " VND"}</div>
+                                </div>
+                                <div className='w-full grid grid-cols-6 items-center' >
+                                    <div className='font-semibold col-span-1'>Staff: </div>
+                                    <div className='col-span-5'> {data.staff?.id === user?.id ? (data.staff?.fullName + ' (You)') : data.staff?.fullName}</div>
+                                </div>
+                            </div>
+                            <div className='col-span-1'>
+                                <img src={data.customer.avatarImage}/>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+
+                    <div className='text-xl underline font-bold'>Items</div>
+                    <div className='flex flex-row items-start space-x-3'>
+                        <div className='w-full grid grid-cols-1'>
+                            {
+                                <div className=" text-lg font-bold text-white bg-blue-400 grid grid-cols-12 gap-2 px-3 py-1.5">
+                                    <div className='col-span-1'> Image </div>
+                                    <div className='col-span-3'> Items </div>
+                                    <div className='col-span-2'> Price </div>
+                                    <div className='col-span-1'> Quantity </div>
+                                    <div className='col-span-3'> Voucher </div>
+                                    <div className='col-span-2'> Final price </div>
+                                </div>
+                            }
+                            {
+                                data.items.map((item: any) => {
+                                    return (
+                                        <div className='grid grid-cols-12 bg-white space-y-2 border-2 border-gray-200 items-center' key={item.itemId}>
+                                            <div className='col-span-1 px-2 py-2'>
+                                                <div className="">
+                                                    <img
+                                                         src={item.item.image}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className='col-span-3 px-2 py-2'>
+                                                {item.item.name}
+                                            </div>
+                                            <div className='col-span-2 px-2 py-2 text-blue-500 font-semibold'>
+                                                {item.item.price.toLocaleString() + "VND"}
+                                            </div>
+                                            <div className='col-span-1 px-2 py-2'>
+                                                {item.quantity}
+                                            </div>
+                                            <div className='col-span-3 px-2 py-2'>
+                                            <div className='flex flex-col'>
+                                                    <div> {item.voucher?.content || ''}</div>
+                                                    <div> {item.voucher?.offString || ''}</div>
+                                                </div>
+                                            </div>
+                                            <div className='col-span-2 px-2 py-2 text-blue-500 font-semibold'>
+                                                {(item.item.price * item.quantity* (1-(item.voucher?.offValue/100 || 0))).toLocaleString() + "VND"}
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                    <div className='flex flex-row px-5 justify-end text-xl font-bold text-blue-600'>
+                        Total price of all receipt: {data.finalPrice.toLocaleString() + " VND"}
                     </div>
                 </div>
             </div>

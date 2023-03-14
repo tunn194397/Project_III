@@ -14,8 +14,7 @@ export default function ManagerManager() {
         {field: 'email', title: 'email', width: 15},
         {field: 'phone', title: 'phone', width: 10},
         {field: 'role', title: 'role', width: 10},
-        {field: 'status', title: 'status', width: 10},
-        {field: '', title: 'action', width: 5},
+        {field: 'status', title: 'status', width: 10}
     ]
     const [data, setData] = useState([])
     const [openAdd, setOpenAdd] = useState(false)
@@ -111,6 +110,7 @@ export default function ManagerManager() {
                 pagination={pagination}
                 filterArray={filterArray}
                 setOpenAdd={setOpenAdd}
+                addPermission = {true}
                 setSearchQuery={setSearchQuery}
             />
             {

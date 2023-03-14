@@ -13,7 +13,7 @@ export default function CreatePopUp(props: any) {
         setOpenAdd(false)
     }
     return (
-        <div className='fixed mx-auto my-auto inset-0 h-[600px] w-[600px] bg-gray-100 shadow-gray-300 shadow-xl rounded-lg'>
+        <div className='fixed mx-auto mt-1/5 inset-0 h-[570px] w-[600px] bg-gray-100 shadow-gray-300 shadow-xl rounded-lg'>
             <div className="relative flex-1 bg-green-300 font-bold text-xl text-black rounded-t-md text-center py-2">
                 <div>{title}</div>
                 <div className="absolute right-0 top-0 px-2 py-2">

@@ -10,7 +10,7 @@ import TableData from "../../../atoms/TableData";
 import {useNavigate} from "react-router-dom";
 
 export default function ManagerSupplyReceipt() {
-    const {token} = useContext(AuthContext)
+    const {token, permission} = useContext(AuthContext)
     const navigate = useNavigate()
     const headers = [
         {title: 'id', field: 'id', width: 5},
@@ -19,8 +19,7 @@ export default function ManagerSupplyReceipt() {
         {title: 'note', field: 'note',width: 15},
         {title: 'sale', field: 'saleOff',width: 5},
         {title: 'final price',field: 'finalPrice', width: 12},
-        {title: 'time', field: 'updatedAt',width: 10},
-        {title: 'action', field: '',width: 5},
+        {title: 'time', field: 'updatedAt',width: 10}
     ]
     const [data, setData] = useState([])
     const [pagination, setPagination] = useState({})
@@ -113,7 +112,7 @@ export default function ManagerSupplyReceipt() {
         <div className='flex flex-col'>
             <div className='text-2xl text-black font-bold ml-3 mb-5'>Supply Receipts Management</div>
             <div className = 'flex flex-col bg-white mt-3 py-6 space-y-8 rounded-xl border-[1px] border-gray-300 '>
-                <SearchBarWithCreatePage filterArray={filterArray} handleAdd={changeToCreatePage}/>
+                <SearchBarWithCreatePage filterArray={filterArray} handleAdd={changeToCreatePage} addPermission={permission.includes('MANAGER_SUPPLY_RECEIPT_CREATE')}/>
                 <TableData headers={headers} data={data} pagination={pagination} setSearchQuery={setSearchQuery} ></TableData>
             </div>
         </div>

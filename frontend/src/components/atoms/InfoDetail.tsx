@@ -3,17 +3,33 @@ import InputItem from "./InputItem";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/AuthContext";
 
+interface IDefaultValueObject {
+    [key: string]: any
+}
+
 export default function InfoDetail(props: any) {
     const {token, user, permission} = useContext(AuthContext)
     const {updateFunction, data, buttonPermission} = props;
     const [isEdit, setIsEdit] = useState(false)
-    const { control, register, handleSubmit, formState: { errors } } = useForm({
+    const { control, register, handleSubmit, formState: { errors }, reset } = useForm({
         criteriaMode: "all"
     });
     const onSubmit = async (body: any) => {
-        console.log("body",body)
+        updateFunction(body)
         setIsEdit(false)
     }
+
+    useEffect(() => {
+        const newDefaultValueObject :IDefaultValueObject = {};
+        data.map((domain: any) => {
+            const tmpObject : IDefaultValueObject = {}
+            domain.fields.map((e: any) => {
+                tmpObject[`${e.field}`] = e.defaultValue?.value?  e.defaultValue?.value:  e.defaultValue;
+            })
+            newDefaultValueObject[`${domain.domain}`] = tmpObject
+        })
+        reset(newDefaultValueObject)
+    },[data])
 
     return (
         <div className="bg-white px-5 py-5 border-[1px] border-gray-200 rounded-xl">
@@ -36,7 +52,7 @@ export default function InfoDetail(props: any) {
                                                     (
                                                         <div key={e.field} className='space-y-1'>
                                                             <div className='text-sm'>{e.label}</div>
-                                                            <InputItem field={e} register={register} control={control} errors={errors} isEdit={isEdit}></InputItem>
+                                                            <InputItem field={e} register={register} control={control} errors={errors} isEdit={isEdit} domain={domain.domain}></InputItem>
                                                         </div>
                                                     ): <></>
                                                 })
@@ -49,7 +65,7 @@ export default function InfoDetail(props: any) {
                                                         (
                                                             <div key={e.field} className='space-y-1'>
                                                                 <div className='text-sm'>{e.label}</div>
-                                                                <InputItem field={e} register={register} control={control} errors={errors} isEdit={isEdit}></InputItem>
+                                                                <InputItem field={e} register={register} control={control} errors={errors} isEdit={isEdit} domain={domain.domain}></InputItem>
                                                             </div>
                                                         ): <></>
                                                 })

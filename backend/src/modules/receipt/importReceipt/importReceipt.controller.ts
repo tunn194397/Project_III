@@ -1,15 +1,21 @@
 import {ImportReceiptService} from "./importReceipt.service";
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query} from "@nestjs/common";
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards} from "@nestjs/common";
 import {CreateManagerDto} from "../../manager/dto/createManager.dto";
 import {UpdateManagerDto} from "../../manager/dto/updateManager.dto";
 import {FindReceiptDto} from "./dto/findReceipt.dto";
-import {ApiBody, ApiTags} from "@nestjs/swagger";
-import {CreateTotalItemDto} from "../../item/dto/createTotalItem.dto";
+import {ApiBearerAuth, ApiBody, ApiTags} from "@nestjs/swagger";
 import {CreateTotalImportReceiptDto} from "./dto/createTotalImportReceipt.dto";
-import {UpdateImportReceiptDto} from "./dto/updateImportReceipt.dto";
 import {UpdateTotalImportReceiptDto} from "./dto/updateTotalImportReceipt.dto";
 import {FindHomeDataDto} from "../../item/dto/findHomeData.dto";
+import {Roles} from "../../roles/roles.decorator";
+import {RoleEnum} from "../../roles/roles.enum";
+import {AuthGuard} from "@nestjs/passport";
+import {RolesGuard} from "../../roles/roles.guard";
 
+
+@ApiBearerAuth()
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Import Receipt')
 @Controller({
     path: 'receipt/import',
@@ -40,7 +46,6 @@ export class ImportReceiptController {
     @ApiBody({required: true, type: CreateTotalImportReceiptDto})
     @HttpCode(HttpStatus.CREATED)
     create(@Body() body: CreateTotalImportReceiptDto) {
-        console.log(body)
         return this.importReceiptService.create(body.receipt, body.receiptItems)
     }
 

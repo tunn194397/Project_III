@@ -1,10 +1,10 @@
-import {Injectable} from "@nestjs/common";
+import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {
     DeviceParameter,
     DeviceType, ImportReceipt,
     Item,
-    ItemParameter, SellReceipt, Supply, Voucher, Warehouse,
+    ItemParameter, Report, SellReceipt, Supply, User, Voucher, Warehouse,
 } from "../../database/entities";
 import {Brackets, Repository} from "typeorm";
 import {CreateItemDto} from "./dto/createItem.dto";
@@ -13,12 +13,18 @@ import {FindItemDto} from "./dto/findItem.dto";
 import {UpdateTotalItemDto} from "./dto/updateTotalItem.dto";
 import {UpdateItemParameterDto} from "./dto/updateItemParameter.dto";
 import {FindHomeDataDto} from "./dto/findHomeData.dto";
+import {CreateCommentDto} from "./dto/createComment.dto";
+import {UpdateCommentDto} from "./dto/updateComment.dto";
+import {HttpResponse} from "aws-sdk";
 
 @Injectable()
 export class ItemService {
     constructor(
         @InjectRepository(Item)
         private itemRepository: Repository<Item>,
+
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
 
         @InjectRepository(ItemParameter)
         private itemParameterRepository: Repository<ItemParameter>,
@@ -41,6 +47,9 @@ export class ItemService {
         @InjectRepository(Voucher)
         private voucherRepository: Repository<Voucher>,
 
+        @InjectRepository(Report)
+        private reportRepository: Repository<Report>,
+
         @InjectRepository(Warehouse)
         private warehouseRepository: Repository<Warehouse>,
 
@@ -57,8 +66,6 @@ export class ItemService {
         const deviceType = Number(findItemDto.deviceType) || 0;
         const branch = findItemDto.branch || '';
         const supplyId = findItemDto.supplyId || '0';
-
-        console.log("page", page)
 
         let qb = this.itemRepository.createQueryBuilder('item')
             .where(new Brackets(qb => {
@@ -118,9 +125,17 @@ export class ItemService {
                     'dp.param_unit as paramUnit'
                 ])
                 .execute()
-            // console.log(parameter)
             const supply = await this.supplyRepository.findOne({id: e.supplyId})
-            result.push({...e, parameter: parameter, supply: supply})
+            const warehouse = await this.warehouseRepository.findOne({itemId: e.id})
+            const vouchers = await this.voucherRepository.createQueryBuilder('voucher')
+                .where(new Brackets(qb => {
+                    qb.where('voucher.device_type_ids like :id', {id: `%${String(e.deviceTypeId)}%`})
+                        .orWhere('voucher.device_branches like :branch', {branch: `%${e.branch}%`})
+                }))
+                .andWhere('voucher.started_at <= :now && voucher.finished_at >= :now', {now: (new Date()).getTime()})
+                .getMany()
+
+            result.push({...e, parameter: parameter, supply: supply, warehouse: warehouse, vouchers: vouchers})
         }
 
         let total = await paginationQb.select(['count(item.id) as total']).execute()
@@ -149,7 +164,26 @@ export class ItemService {
             const deviceParameter = await this.deviceParameterRepository.findOne({id: e.deviceParameterId})
             e.deviceParameterName = deviceParameter.paramName
         }))
-        return result;
+
+        const comments = await this.reportRepository.createQueryBuilder('report')
+            .where('report.item_id = :id', {id: result.id})
+            .orderBy('report.id', 'DESC')
+            .getMany()
+
+        const commentResult : any[] =[];
+
+        for (const e of comments) {
+            const user = await this.userRepository.createQueryBuilder('user')
+                .where('user.id = :id', {id: e.reporterId})
+                .getOne()
+            commentResult.push({...e, reporter: user})
+        }
+
+        const vouchers = await this.voucherRepository.createQueryBuilder('voucher')
+            .where('voucher.started_at <= :startedAt and voucher.finished_at >= :finishedAt', {startedAt: new Date().getTime() , finishedAt: new Date().getTime()})
+            .orderBy('voucher.off_value', 'DESC')
+            .getMany()
+        return {...result, comments: commentResult, vouchers: vouchers};
     }
 
     async create(item: CreateItemDto, itemParameters: CreateItemParameterDto[]) {
@@ -240,4 +274,48 @@ export class ItemService {
             }
         }
     }
+
+    async createComment(createComment: CreateCommentDto) {
+        return await this.reportRepository.createQueryBuilder('report')
+            .insert()
+            .into(Report)
+            .values([{
+                ...createComment,
+                createdAt: new Date().getTime(),
+                updatedAt: new Date().getTime()
+            }])
+            .execute()
+    }
+
+    async updateComment(commentId: number, id: number, updateCommentDto: UpdateCommentDto) {
+        const comment = await this.reportRepository.findOne({id: commentId})
+        if (!comment || comment.reporterId !== id ) throw new HttpException(
+            ['Comment is not belong to this customer!'],
+            HttpStatus.BAD_REQUEST
+        )
+        return await this.reportRepository.createQueryBuilder('report')
+            .update(Report)
+            .set({
+                ...updateCommentDto,
+                updatedAt: new Date().getTime()
+            })
+            .execute()
+    }
+
+    async deleteComment(commentId: number, id: number) {
+        const comment = await this.reportRepository.findOne({id: commentId})
+        if (!comment || comment.reporterId !== id ) throw new HttpException(
+            ['Comment is not belong to this customer!'],
+            HttpStatus.BAD_REQUEST
+        )
+        return await this.reportRepository.createQueryBuilder('report')
+            .delete()
+            .from(Report)
+            .where({
+                id: commentId
+            })
+            .execute()
+    }
+
+
 }

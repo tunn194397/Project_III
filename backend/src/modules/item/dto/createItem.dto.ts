@@ -28,6 +28,14 @@ export class CreateItemDto {
         required: false
     })
     @IsNotEmpty()
+    importPrice: number;
+
+    @ApiProperty({
+        type: Number,
+        example: '',
+        required: false
+    })
+    @IsNotEmpty()
     price: number;
 
     @ApiProperty({

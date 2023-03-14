@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ILoginRequest, IRegisterRequest } from './types';
+import {IGetDetailUser, ILoginRequest, ICreateCustomer} from './types';
 const baseUserURL = `${process.env.REACT_APP_BE_HOST}`;
 export const userLogin = async (props: ILoginRequest) => {
     try {
@@ -34,9 +34,40 @@ export const userLogin = async (props: ILoginRequest) => {
     }
 };
 
-export const registerUser = async (props: IRegisterRequest) => {
+export const registerUser = async (props: ICreateCustomer) => {
     try {
-        const result = await axios.post(`${baseUserURL}auth/register`, props);
+        const result = await axios.post(`${baseUserURL}customer`, props);
+        return {
+            success: true,
+            data: result.data,
+            message: 'Sign up successfully!'
+        };
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            return {
+                success: false,
+                data: null,
+                message: 'User have email or phone or username is existed!'
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Network error',
+                data: null
+            };
+        }
+    }
+};
+
+export const getDetailUser = async (token: string | null, props: IGetDetailUser) => {
+    try {
+        const result = await axios.get(`${baseUserURL}users/${props.id}`, {
+            headers: {
+                accept: 'application/json',
+                authorization: `Bearer ${token}`,
+                'content-type': 'application/json'
+            }
+        });
         return {
             success: true,
             data: result.data,

@@ -11,21 +11,19 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
   HttpStatus,
-  HttpCode,
+  HttpCode, Put,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiParam, ApiTags} from '@nestjs/swagger';
 import { infinityPagination } from 'src/shared/utils/infinity_pagination';
 import { Roles } from '../roles/roles.decorator';
 import { RoleEnum } from '../roles/roles.enum';
-import { RolesGuard } from '../roles/roles.guard';
 import { CreateUserRequestDTO } from './dto/request/create_user.dto';
 import { UpdateUserRequestDTO } from './dto/request/update_user.dto';
 import { UsersService } from './users.service';
 import {Causes} from "../../config/exception/causes";
+import {UpdateUserBankDetailDto} from "./dto/request/updateBankInformation.dto";
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Users')
 @Controller({
   path: 'users',
@@ -33,6 +31,14 @@ import {Causes} from "../../config/exception/causes";
 })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Put(':id/bank-information')
+  @ApiBody({required: true, type: UpdateUserBankDetailDto})
+  @ApiParam({name: 'id', required: true, type: Number})
+  @HttpCode(HttpStatus.OK)
+  updateUserBankInformation(@Param('id') id: number, @Body() detail: UpdateUserBankDetailDto) {
+    return this.usersService.updateBankInformation(id, detail)
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -61,7 +67,7 @@ export class UsersController {
   }
 
   @Get('/role')
-  @Roles(RoleEnum.user, RoleEnum.staff, RoleEnum.superManager, RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.sellManager)
+  @Roles(RoleEnum.user, RoleEnum.sellStaff, RoleEnum.superManager, RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.sellManager)
   @HttpCode(HttpStatus.OK)
   async findAllUserWithRole(
       @Query('roleId', ParseIntPipe) roleId: number
@@ -84,7 +90,6 @@ export class UsersController {
   ) {
     return this.usersService.update(id, updateProfileDto);
   }
-
 
   // @Delete(':id')
   // async remove(@Param('id') id: number) {

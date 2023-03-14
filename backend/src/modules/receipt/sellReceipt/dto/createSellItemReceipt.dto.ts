@@ -18,4 +18,11 @@ export class CreateSellItemReceiptDto {
     @IsNotEmpty()
     quantity: number;
 
+    @ApiProperty({
+        type: String,
+        example: 10,
+        required: false
+    })
+    @IsNotEmpty()
+    voucherId: number;
 }

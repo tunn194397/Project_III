@@ -12,6 +12,7 @@ export default function Navbar() {
   const logout = () => {
     clearAuthData?.();
     toast.success('Logout successful!');
+    navigate('/manager/login')
   }
   const returnHome = () => {
     navigate('/manager/')

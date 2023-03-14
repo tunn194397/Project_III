@@ -35,9 +35,9 @@ const TableData: FC<Props> = ({ headers, data, pagination, setSearchQuery }) => 
     }
 
     return (
-        <div className='flex flex-col'>
-            <table className='w-full rounded-md '>
-                <thead className='capitalize bg-gray-100 '>
+        <div className='flex flex-col mx-2 border-[1px] border-gray-200'>
+            <table className='w-full rounded-md'>
+                <thead className='capitalize bg-blue-300 '>
                     <tr>
                         {
                             headers.map((header: any, index: number) => {
@@ -67,7 +67,7 @@ const TableData: FC<Props> = ({ headers, data, pagination, setSearchQuery }) => 
                 {
                     (GetTableData(headers, data)).map((row: any, index: number) => {
                         return (
-                            <tr key={index} className='bg-white'>
+                            <tr key={index} className='bg-white hover:bg-blue-50' onClick={()=> goToDetail(row[0])}>
                                 {row.map((e: any, indexOfData: number) => {
                                     return (
                                         (String(e).substring(0,6) !=='image?')
@@ -81,20 +81,26 @@ const TableData: FC<Props> = ({ headers, data, pagination, setSearchQuery }) => 
                                                 </td>
                                     )
                                 })}
-                                <td  scope="col" className="py-2 border-y">
-                                    <button
-                                        className='bg-blue-600 px-3 py-1 rounded font-semibold text-white hover:ring-4 hover:ring-blue-300'
-                                        onClick={()=> goToDetail(row[0])}
-                                    >
-                                        Detail
-                                    </button>
-                                </td>
+                                {/*<td  scope="col" className="py-2 border-y">*/}
+                                {/*    <button*/}
+                                {/*        className='bg-blue-600 px-3 py-1 rounded font-semibold text-white hover:ring-4 hover:ring-blue-300'*/}
+                                {/*        onClick={()=> goToDetail(row[0])}*/}
+                                {/*    >*/}
+                                {/*        Detail*/}
+                                {/*    </button>*/}
+                                {/*</td>*/}
                             </tr>
                         )
                     })
                 }
                 </tbody >
             </table>
+            {!data.length ?
+                <div className='flex flex-row items-center justify-center w-full font-semibold text-lg py-20'>
+                    <div>No data.</div>
+                </div>
+                : <></>
+            }
             <Pagination pagination={pagination} setSearchQuery={setSearchQuery}></Pagination>
         </div>
     );

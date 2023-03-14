@@ -9,9 +9,6 @@ export class UpdateVoucherDto {
         type: String,
         example: "Ha Noi Computer",
     })
-    @Validate(IsNotExist, ['Voucher'], {
-        message: 'contentDuplicate',
-    })
     @IsOptional()
     content: string;
 
@@ -20,14 +17,14 @@ export class UpdateVoucherDto {
         example: "Monitor",
     })
     @IsOptional()
-    deviceType: string;
+    deviceTypeIds: string;
 
     @ApiProperty({
         type: String,
         example: "hanoicomputer@email.com",
     })
     @IsOptional()
-    deviceBranch: string;
+    deviceBranches: string;
 
     @ApiProperty({
         type: Number,

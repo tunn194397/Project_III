@@ -20,7 +20,7 @@ export default function ManagerPermission() {
     // ]
     return (
         <div className='flex flex-col m-2'>
-            <div> PERMISSION </div>
+            {/*<div> PERMISSION </div>*/}
             {/*<div className='flex '>*/}
             {/*    <div className='text-3xl text-black font-bold ml-3 mb-5'>Permission Management</div>*/}
             {/*</div>*/}

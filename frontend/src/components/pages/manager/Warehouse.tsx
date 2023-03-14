@@ -15,8 +15,7 @@ export default function ManagerWarehouse() {
         {title: 'total',field: 'totalQuantity', width: 10},
         {title: 'sole',field: 'soleQuantity', width: 10},
         {title: 'remain',field: 'remainQuantity', width: 10},
-        {title: 'updated', field: 'updatedAt',width: 12},
-        {title: 'action', field: '',width: 5},
+        {title: 'updated', field: 'updatedAt',width: 12}
     ]
     const [data, setData] = useState([])
     const [openAdd, setOpenAdd] = useState(false)
@@ -77,7 +76,9 @@ export default function ManagerWarehouse() {
                 pagination={pagination}
                 filterArray={filterArray}
                 setOpenAdd={setOpenAdd}
-                setSearchQuery={setSearchQuery}/>
+                setSearchQuery={setSearchQuery}
+                addPermission = {true}
+            />
         </div>
     );
 }

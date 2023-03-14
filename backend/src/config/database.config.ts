@@ -24,7 +24,7 @@ import {
     User,
     Report,
     Voucher,
-    Warehouse
+    Warehouse, CustomerCart
 } from '../database/entities';
 
 export const databaseConfig: ConnectionOptions = {
@@ -59,7 +59,7 @@ export const databaseConfig: ConnectionOptions = {
         User,
         Report,
         Voucher,
-        Warehouse
+        Warehouse, CustomerCart
     ],
     synchronize: true,
     logging: ["error"],

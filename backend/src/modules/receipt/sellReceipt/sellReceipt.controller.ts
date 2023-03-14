@@ -1,14 +1,21 @@
 import {SellReceiptService} from "./sellReceipt.service";
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query} from "@nestjs/common";
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards} from "@nestjs/common";
 import {CreateManagerDto} from "../../manager/dto/createManager.dto";
 import {UpdateManagerDto} from "../../manager/dto/updateManager.dto";
 import {FindReceiptDto} from "./dto/findReceipt.dto";
-import {ApiBody, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiTags} from "@nestjs/swagger";
 import {CreateTotalItemDto} from "../../item/dto/createTotalItem.dto";
 import {CreateTotalSellReceiptDto} from "./dto/createTotalSellReceipt.dto";
 import {FindHomeDataDto} from "../../item/dto/findHomeData.dto";
+import {Roles} from "../../roles/roles.decorator";
+import {RoleEnum} from "../../roles/roles.enum";
+import {AuthGuard} from "@nestjs/passport";
+import {RolesGuard} from "../../roles/roles.guard";
 
 @ApiTags('Sell Receipt')
+@ApiBearerAuth()
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller({
     path: 'receipt/sell',
     version: '1',

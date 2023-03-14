@@ -10,7 +10,6 @@ const Pagination: FC<Props> = ({pagination, setSearchQuery}) => {
     for (let i = 1; i <= totalPage; i ++) pageArray.push(i);
 
     const handleNextButton = () => {
-        console.log("HL")
         setSearchQuery((prevState: any) => ({
             ... prevState,
             page: (prevState.page >= totalPage) ? prevState.page : (prevState.page + 1)
@@ -32,7 +31,7 @@ const Pagination: FC<Props> = ({pagination, setSearchQuery}) => {
     }
     return (
         <div className='bg-gray-100'>
-            <div className='flex items-center justify-between px-8 py-3 border-b-[2px] border-gray-200' >
+            <div className='flex items-center justify-between px-8 py-1 border-gray-200' >
             <div className='text-sm font-semibold'>{(currentPage -1) * pageSize}-{(currentPage -1) * pageSize +currentPageSize} of {totalItem}</div>
                 <div className='flex flex-row space-x-1'>
                     <button onClick={handlePrevButton}>

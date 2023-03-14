@@ -29,12 +29,11 @@ const headers = [
     {title: 'email', field: 'email', width: 15},
     {title: 'hotline', field: 'phone', width: 12},
     {title: 'representative', field: 'representativeName', width: 15},
-    {title: 'connected', field: 'updatedAt', width: 10},
-    {title: 'action', field: '', width: 5}
+    {title: 'connected', field: 'updatedAt', width: 10}
 ]
 
 export default function ManagerSupply() {
-    const {token, roleId, user} = useContext(AuthContext)
+    const {token, roleId, user, permission} = useContext(AuthContext)
     const [data, setData] = useState([])
     const [fieldToAdd, setFieldToAdd] = useState([
         {
@@ -93,7 +92,6 @@ export default function ManagerSupply() {
                     }
                 });
                 setRepresentative(dataRaw)
-                console.log("raw", dataRaw)
                 return dataRaw
             }
             else toast.error(result.message)
@@ -163,17 +161,18 @@ export default function ManagerSupply() {
     return (
         <div className='flex flex-col'>
             <div className='text-2xl text-black font-bold ml-3 mb-5'>Supply Management</div>
-            <div className='flex flex-col space-y-2 items-end'>
+            {permission.includes('MANAGER_SUPPLY_CREATE') && <div className='flex flex-col space-y-2 items-end'>
                 <button className='border-[1px] border-black hover:ring-4 hover:ring-blue-400 px-2 py-2 bg-white rounded-md font-semibold' onClick={() => setOpenAddRep(true)}>
                     Add new supply representative
                 </button>
-            </div>
+            </div>}
             <TableComponent
                 headers= {headers}
                 data={data}
                 pagination={pagination}
                 filterArray={filterArray}
                 setOpenAdd={setOpenAdd}
+                addPermission = {permission.includes('MANAGER_SUPPLY_CREATE')}
                 setSearchQuery={setSearchQuery}/>
             {
                 openAdd ?

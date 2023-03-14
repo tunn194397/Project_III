@@ -43,7 +43,7 @@ export class UsersService {
           this.customerRepository.create({userId: user.id}),
       );
     }
-    else if (createProfileDTO.roleId === RoleEnum.staff) {
+    else if (createProfileDTO.roleId === RoleEnum.sellStaff) {
       userInfo = await this.staffRepository.save(
           this.staffRepository.create({userId: user.id}),
       );
@@ -79,7 +79,7 @@ export class UsersService {
   ): Promise<User> {
     let user = await this.usersRepository.findOne({ where: { id } });
     return this.usersRepository.save({
-      ...user, ...updateProfileDTO
+      ...user, ...updateProfileDTO, fullName: updateProfileDTO.firstName + " " + updateProfileDTO.lastName
     });
   }
 
@@ -118,6 +118,13 @@ export class UsersService {
     return {
       result: users
     };
+  }
+
+  async updateBankInformation(id: number, detail) {
+    let user = await this.usersRepository.findOne({ where: { id } });
+    return this.usersRepository.save({
+      ...user, ...detail
+    });
   }
 
 }

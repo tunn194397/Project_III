@@ -12,21 +12,20 @@ import {useNavigate} from "react-router-dom";
 
 export default function ManagerSellReceipt() {
     const navigate = useNavigate()
-    const {token} = useContext(AuthContext)
+    const {token, user, permission} = useContext(AuthContext)
     const headers = [
         {title: 'id', field: 'id', width: 2},
         {title: 'customer', field: 'customer',width: 14},
         {title: 'staff', field: 'staff',width: 14},
-        {title: 'content', field: 'content',width: 14},
         {title: 'total price',field: 'totalPrice', width: 12},
         {title: 'sale ', field: 'saleOff',width: 5},
         {title: 'final price',field: 'finalPrice', width: 12},
-        {title: 'time', field: 'updatedAt',width: 10},
-        {title: 'action', field: '',width: 5},
+        {title: 'time', field: 'updatedAt',width: 10}
     ]
     const [data, setData] = useState([])
     const [customers, setCustomers] = useState([])
-    const [staffs, setStaffs] = useState([])
+    const firstStaffData : any[] = []
+    const [staffs, setStaffs] = useState(firstStaffData)
     const [pagination, setPagination] = useState({})
     const [searchQuery, setSearchQuery] = useState({
         page: 1,
@@ -50,7 +49,6 @@ export default function ManagerSellReceipt() {
     useEffect(() => {
         (async () => {
             const result = await getList(token, searchQuery);
-            console.log("Result", result.data.result)
             if (result.meta.message === 'Successful') {
                 const dataRaw = result.data.result;
                 dataRaw.map((e: any) => {
@@ -60,7 +58,10 @@ export default function ManagerSellReceipt() {
                     e.note = (e.note).length > 20 ? (e.note.substring(0,20) + "...") : e.note
                     e.content = (e.content).length > 20 ? (e.content.substring(0,20) + "...") : e.content
                     e.customer = <div><div>{e.customer?.fullName}</div><div className="text-xs">({e.customerId})</div></div>;
-                    e.staff = <div><div>{e.staff?.fullName || e.manager?.fullName}</div><div className="text-xs">({e.staffId})</div></div>;
+                    e.staff = <div>
+                                <div>{e.staff?.fullName || e.manager?.fullName || ''}</div>
+                                <div className="text-xs">{e.staffId? `(${e.staffId})` : ''}</div>
+                            </div>;
                     e.updatedAt = <div>
                         <div>{(new Date(Number(e.updatedAt))).toLocaleDateString()}</div>
                         <div className="text-xs">{(new Date(Number(e.updatedAt))).toLocaleTimeString()}</div>
@@ -85,7 +86,7 @@ export default function ManagerSellReceipt() {
             }
             else toast.error(result.message)
 
-            const staffResult = await getListStaff(token, {page: 1, pageSize: 1000, searchString: '', orderField: 'name', orderBy: 'ASC'})
+            const staffResult = await getListStaff(token, {page: 1, pageSize: 1000, searchString: '', orderField: 'name', orderBy: 'ASC', staffRoleId: 0})
             if (staffResult.meta.message === 'Successful') {
                 const options = staffResult.data.result.map((e: any) => {
                     return {
@@ -140,7 +141,7 @@ export default function ManagerSellReceipt() {
         <div className='flex flex-col'>
             <div className='text-2xl text-black font-bold ml-3 mb-5'>Sell Receipts Management</div>
             <div className = 'flex flex-col bg-white mt-3 py-6 space-y-8 rounded-xl border-[1px] border-gray-300 '>
-                <SearchBarWithCreatePage filterArray={filterArray} handleAdd={changeToCreatePage}/>
+                <SearchBarWithCreatePage filterArray={filterArray} handleAdd={changeToCreatePage} addPermission={permission.includes('MANAGER_SELL_CREATE')}/>
                 <TableData headers={headers} data={data} pagination={pagination} setSearchQuery={setSearchQuery} ></TableData>
             </div>
         </div>

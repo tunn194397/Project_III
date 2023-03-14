@@ -4,14 +4,14 @@ import {IMAGES} from "../../../../utils/images/images";
 import InfoDetail from "../../../atoms/InfoDetail";
 import {AuthContext} from "../../../../context/AuthContext";
 import {getAllBranch, getDetailManager} from "../../../../api/manager/employee/manager/request";
-import {getDetailStaff} from "../../../../api/manager/employee/staff/request";
+import {getDetailStaff, updateStaff} from "../../../../api/manager/employee/staff/request";
+import {updateVoucher} from "../../../../api/manager/voucher/request";
+import {toast} from "react-toastify";
 
 const buttonPermission = {
-    total: 'MANAGER_CUSTOMER_VIEW',
-    edit: 'MANAGER_CUSTOMER_UPDATE',
-    save: 'MANAGER_CUSTOMER_UPDATE',
-    submit: 'MANAGER_CUSTOMER_SUBMIT',
-    approve: 'MANAGER_CUSTOMER_APPROVE'
+    total: 'MANAGER_STAFF_VIEW',
+    edit: 'MANAGER_STAFF_UPDATE',
+    save: 'MANAGER_STAFF_UPDATE',
 }
 const statusOptions = [
     {value: 'ACTIVE', label: 'Active'},
@@ -34,17 +34,25 @@ export default function ManagerStaffDetail() {
         navigate(`/${path}`)
     }
 
-    const updateManager= async (body: any) => {
-        console.log("body", body)
+    const update= async (body: any) => {
+        body.updateUser.birthday = (body.updateUser.birthday).getTime();
+        body.updateStaff.firstWorkedDate = (body.updateStaff.firstWorkedDate).getTime()
+        body.updateStaff.salary = Number(body.updateStaff.salary)
+
+        const updateResult = await updateStaff(token, Number(id), body)
+        if (updateResult?.meta?.code === 200) {
+            toast.success("Update staff information successful!")
+        }
+        else toast.error("Update staff information unsuccessful!")
     }
 
     const getData = (result: any, branchResult: any) => {
         const data = [
             {
-                domain: "User personal information",
+                domain: 'updateUser', domainTitle: "User personal information",
                 fields:  [
                     {field: "avatarImage", editable: false, name: "id", label: "Avatar", type: 'image', defaultValue: result.user.avatarImage},
-                    {field: "name", editable: false, name: "fullName", label: "Full name", type: 'input', defaultValue: result.user.fullName},
+                    {field: "fullName", editable: false, name: "fullName", label: "Full name", type: 'input', defaultValue: result.user.fullName},
                     {field: "firstName", editable: true, name: "firstName", label: "First name", type: 'input',  defaultValue: result.user.firstName},
                     {field: "lastName", editable: true, name: "lastName", label: "Last name", type: 'input', defaultValue: result.user.lastName},
                     {field: "email", editable: true, name: "email", label: "Customer email", type: 'input', defaultValue: result.user.email},
@@ -57,7 +65,7 @@ export default function ManagerStaffDetail() {
                 ]
             },
             {
-                domain: "Staff additional information",
+                domain: 'updateStaff', domainTitle: "Staff additional information",
                 fields: [
                     {field: "branchId", editable: true, name: "branchId", label: "Branch", type: 'select', options: branchResult,
                         defaultValue: branchResult.find((c: any) => c.value === result.staff.branchId)
@@ -99,7 +107,7 @@ export default function ManagerStaffDetail() {
                 <div className='text-2xl text-black font-bold'>Staff Account</div>
             </div>
             <div className='px-5 py-3'>
-                <InfoDetail updateFunction={updateManager} data={data} buttonPermission={buttonPermission}></InfoDetail>
+                <InfoDetail updateFunction={update} data={data} buttonPermission={buttonPermission}></InfoDetail>
             </div>
 
         </div>

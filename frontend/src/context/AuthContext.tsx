@@ -14,6 +14,11 @@ interface IUser {
   birthday: string;
   nationality: string;
   roleId: number;
+  bankName: string;
+  bankAccount: string;
+  bankOwner: string;
+  phone: string;
+  address: string;
   createAt: string;
   updateAt: string;
 }

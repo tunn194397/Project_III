@@ -1,7 +1,30 @@
 import {IMAGES} from "../../../utils/images/images";
 import {UserMainHeaderWrapper, Image} from "../../../style/styled";
+import {useNavigate} from "react-router-dom";
+import {useContext} from "react";
+import {AuthContext} from "../../../context/AuthContext";
+import {toast} from "react-toastify";
 
 export default function UserMainNavbar() {
+    const {isLogin, clearAuthData} = useContext(AuthContext)
+    const navigate = useNavigate()
+
+    const handleClickLogin = () => {
+        navigate('/user/login')
+    }
+
+    const handleClickRegister = () => {
+        navigate('/user/register')
+    }
+
+    const handleClickLogout = () => {
+        clearAuthData?.()
+        toast.success("Logout successful!")
+    }
+
+    const handleClickCart = () => {
+        navigate('/user/cart')
+    }
     return (
         <UserMainHeaderWrapper className="w-full sticky top-0">
             <nav className='border-[1px] border-b-gray-400 flex w-screen h-[75px] justify-between px-[30px] py-2 items-center bg-gray-300 z-10'>
@@ -32,27 +55,43 @@ export default function UserMainNavbar() {
                                 />
                             </svg>
                         </li>
-                        <li>
-                            <div className = 'flex space-x-1 items-center'>
-                                <div className={'flex flex-col'}>
-                                    <h4 className='text-xs font-bold'> Your cart </h4>
-                                    <h4 className='text-xs'> (0) items</h4>
+                        {
+                            isLogin &&
+                            <li>
+                                <div className = 'flex space-x-1 items-center' onClick={handleClickCart}>
+                                    <div className={'flex flex-col'}>
+                                        <h4 className='text-xs font-bold'> Your cart </h4>
+                                        <h4 className='text-xs'> (0) items</h4>
+                                    </div>
+                                    <svg className='h-8 w-8'>
+                                        {IMAGES.icon.blackSupply}
+                                    </svg>
                                 </div>
-                                <svg className='h-8 w-8'>
-                                    {IMAGES.icon.blackSupply}
-                                </svg>
-                            </div>
-                        </li>
-                        <li>
-                            <div className={'flex flex-col space-y-0.5'}>
-                                <button className="bg-green-600 hover:bg-green-900 py-1 text-white text-xs font-bold px-5 border-b-black border-2 rounded-md">
-                                    Register
-                                </button>
-                                <button className="bg-green-600 hover:bg-green-900 py-1 text-white text-xs font-bold px-5 border-b-black border-2 rounded-md">
-                                    Login
-                                </button>
-                            </div>
-                        </li>
+                            </li>
+                        }
+                        {
+                            !isLogin &&
+                            <li>
+                                <div className={'flex flex-col space-y-0.5'}>
+                                    <button className="bg-green-600 hover:bg-green-900 py-1 text-white text-xs font-bold px-5 border-b-black border-2 rounded-md" onClick={handleClickRegister}>
+                                        Register
+                                    </button>
+                                    <button className="bg-green-600 hover:bg-green-900 py-1 text-white text-xs font-bold px-5 border-b-black border-2 rounded-md" onClick={handleClickLogin}>
+                                        Login
+                                    </button>
+                                </div>
+                            </li>
+                        }
+                        {
+                            isLogin &&
+                            <li>
+                                <div className={'flex flex-col space-y-0.5'}>
+                                    <button className="bg-green-600 hover:bg-green-900 py-1 text-white text-xs font-bold px-5 border-b-black border-2 rounded-md" onClick={handleClickLogout}>
+                                        Logout
+                                    </button>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
 

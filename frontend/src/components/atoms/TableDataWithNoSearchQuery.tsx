@@ -4,20 +4,16 @@ import {GetTableData} from "../../utils/functions/getTableData";
 interface Props {
     headers: any;
     data: any;
+    goToDetail: any
 }
 
-const TableDataWithNoSearchQuery: FC<Props> = ({ headers, data }) =>  {
+const TableDataWithNoSearchQuery: FC<Props> = ({ headers, data, goToDetail }) =>  {
     const navigate = useNavigate()
-    const goToDetail = (id: number) => {
-        const length = (process.env.REACT_APP_MANAGER_ROOT_URL)?.length;
-        const path = (window.location.href).substring(length || 22)
-        navigate(`/${path}/${id}`)
-    }
 
     return (
         <div className='flex flex-col'>
             <table className='w-full rounded-md '>
-                <thead className='capitalize bg-gray-100 '>
+                <thead className='capitalize bg-blue-200 '>
                 <tr>
                     {
                         headers.map((header: any, index: number) => {
@@ -36,7 +32,7 @@ const TableDataWithNoSearchQuery: FC<Props> = ({ headers, data }) =>  {
                 {
                     (GetTableData(headers, data)).map((row: any, index: number) => {
                         return (
-                            <tr key={index} className='bg-white'>
+                            <tr key={index} className='bg-white hover:bg-blue-50' onClick={()=> goToDetail(data[index].id)}>
                                 {row.map((e: any, indexOfData: number) => {
                                     return (
                                         (String(e).substring(0,6) !=='image?')
@@ -50,14 +46,6 @@ const TableDataWithNoSearchQuery: FC<Props> = ({ headers, data }) =>  {
                                             </td>
                                     )
                                 })}
-                                <td  scope="col" className="py-2 border-y">
-                                    <button
-                                        className='bg-blue-600 px-3 py-1 rounded font-semibold text-white hover:ring-4 hover:ring-blue-300'
-                                        onClick={()=> goToDetail(row[0])}
-                                    >
-                                        Detail
-                                    </button>
-                                </td>
                             </tr>
                         )
                     })

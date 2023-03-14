@@ -1,9 +1,21 @@
-export interface IRegisterRequest {
-    username: string;
-    email: string;
-    fullName: string;
-    password: string;
-    roleID: number;
+interface INewUserDto {
+    firstName: string| null | undefined,
+    lastName: string| null | undefined,
+    phone: string| null | undefined,
+    email: string| null | undefined,
+    status: string,
+    birthday: number | null | undefined,
+    username: string| null | undefined,
+    password: string| null | undefined,
+    roleId: number
+}
+interface INewCustomerDto {
+    registerType: string,
+    registerStaffId: number | null
+}
+export interface ICreateCustomer {
+    newUserDto: INewUserDto,
+    newCustomerDto: INewCustomerDto
 }
 export interface IRegisterResponse {
     email: string;
@@ -114,4 +126,8 @@ export interface ILoginExternalWalletRequest {
 export interface IUpdateSendEmailCode {
     emailCode: string;
     status: boolean;
+}
+
+export interface IGetDetailUser {
+    id: number | null |undefined
 }

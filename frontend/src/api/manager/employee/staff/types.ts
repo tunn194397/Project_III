@@ -3,7 +3,8 @@ export interface IGetListStaff  {
     pageSize: number,
     searchString: string,
     orderField: string,
-    orderBy: string
+    orderBy: string,
+    staffRoleId: number | null
 }
 
 interface INewUserDto {

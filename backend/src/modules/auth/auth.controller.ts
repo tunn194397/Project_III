@@ -45,7 +45,7 @@ export class AuthController {
   @Roles(RoleEnum.superAdmin)
   @Roles(RoleEnum.superManager)
   @Roles(RoleEnum.sellManager)
-  @Roles(RoleEnum.staff)
+  @Roles(RoleEnum.sellStaff)
   @Roles(RoleEnum.user)
   @Roles(RoleEnum.supplyManager)
   @UseGuards(AuthGuard('jwt'), RolesGuard)

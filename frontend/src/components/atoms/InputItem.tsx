@@ -2,6 +2,7 @@ import {Controller} from "react-hook-form";
 import {IMAGES} from "../../utils/images/images";
 import DatePicker from "react-datepicker";
 import Select from 'react-select';
+import {useEffect} from "react";
 
 export default function InputItem(props: any) {
     const {field, isEdit, register, errors, control, domain} = props;
@@ -13,10 +14,9 @@ export default function InputItem(props: any) {
                         className="border rounded w-full py-2 px-3 text-gray-700 outline-none text-sm focus:border-blue-500 focus:border-2"
                         type="text"
                         defaultValue={field.defaultValue || ''}
-                        {...register(`${domain}.${field.field}`, {required: true})}
+                        {...register(`${domain}.${field.field}`, {required: false})}
                         disabled={!isEdit || !field.editable}
                     />
-                    {errors[`${domain}.${field.field}`] && <span className="text-red-500 text-sm"> ⚠ This field is required!</span>}
                 </div>
             );
         }

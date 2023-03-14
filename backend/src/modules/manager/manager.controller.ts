@@ -1,11 +1,18 @@
 import {ManagerService} from "./manager.service";
-import {ApiBody, ApiParam, ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query} from "@nestjs/common";
+import {ApiBearerAuth, ApiBody, ApiParam, ApiTags} from "@nestjs/swagger";
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards} from "@nestjs/common";
 import {CreateManagerDto} from "./dto/createManager.dto";
 import {FindDto} from "../../helper/dto/find.dto";
 import {UpdateManagerDetailDto} from "./dto/updateManagerDetail.dto";
+import {Roles} from "../roles/roles.decorator";
+import {RoleEnum} from "../roles/roles.enum";
+import {AuthGuard} from "@nestjs/passport";
+import {RolesGuard} from "../roles/roles.guard";
 
 @ApiTags('Managers')
+@ApiBearerAuth()
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller({
     path: 'managers',
     version: '1',
@@ -35,7 +42,6 @@ export class ManagerController {
     @ApiBody({required: true, type: CreateManagerDto})
     @HttpCode(HttpStatus.CREATED)
     createManager(@Body() body: CreateManagerDto) {
-        console.log(body)
         return this.managerService.createNewManager(body.newUserDto, body.newManagerDto)
     }
 

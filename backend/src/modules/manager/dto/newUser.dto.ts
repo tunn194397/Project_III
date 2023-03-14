@@ -30,6 +30,30 @@ export class NewUserDto {
 
     @ApiProperty({
         type: String,
+        example: 'Tu',
+    })
+    bankName: string;
+
+    @ApiProperty({
+        type: String,
+        example: '094586',
+    })
+    bankAccount: string;
+
+    @ApiProperty({
+        type: String,
+        example: 'admin',
+    })
+    bankOwner: string;
+
+    @ApiProperty({
+        type: String,
+        example: 'admin',
+    })
+    address: string;
+
+    @ApiProperty({
+        type: String,
         example: 'ACTIVE',
     })
     status: string;

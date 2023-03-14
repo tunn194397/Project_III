@@ -2,17 +2,17 @@ import {useContext, useEffect, useMemo, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {IMAGES} from "../../../../utils/images/images";
 import InfoDetail from "../../../atoms/InfoDetail";
-import {getDetailCustomer, getList, getListUserWithRole} from "../../../../api/manager/customer/request";
 import {AuthContext} from "../../../../context/AuthContext";
 import {getAllDeviceType} from "../../../../api/manager/item/item/request";
-import {getDetailVoucher} from "../../../../api/manager/voucher/request";
+import {getDetailVoucher, updateVoucher} from "../../../../api/manager/voucher/request";
+import {toast} from "react-toastify";
 
 const buttonPermission = {
-    total: 'MANAGER_CUSTOMER_VIEW',
-    edit: 'MANAGER_CUSTOMER_UPDATE',
-    save: 'MANAGER_CUSTOMER_UPDATE',
-    submit: 'MANAGER_CUSTOMER_SUBMIT',
-    approve: 'MANAGER_CUSTOMER_APPROVE'
+    total: 'MANAGER_VOUCHER_VIEW',
+    edit: 'MANAGER_VOUCHER_UPDATE',
+    save: 'MANAGER_VOUCHER_UPDATE',
+    submit: 'MANAGER_VOUCHER_SUBMIT',
+    approve: 'MANAGER_VOUCHER_APPROVE'
 }
 const statusOptions = [
     {value: 'ACTIVE', label: 'Active'},
@@ -43,7 +43,7 @@ const branchOptions = [
 
 export default function ManagerVoucherDetail() {
     const {id} = useParams()
-    const {token} = useContext(AuthContext)
+    const {token, permission} = useContext(AuthContext)
     const navigate = useNavigate()
     const firstData: any[] = [];
     const [data, setData] = useState(firstData)
@@ -56,8 +56,18 @@ export default function ManagerVoucherDetail() {
         navigate(`/${path}`)
     }
 
-    const updateVoucher= async (body: any) => {
-        console.log("body", body)
+    const update= async (body: any) => {
+        body.voucher.startedAt = (body.voucher.startedAt).getTime()
+        body.voucher.finishedAt = (body.voucher.finishedAt).getTime()
+        body.voucher.deviceTypeIds = ( body.voucher.deviceTypeIds.map((e: any) => {return e.value})).join(",")
+        body.voucher.deviceBranches = ( body.voucher.deviceBranches.map((e: any) => {return e.value})).join(",")
+        body.voucher.offString = (body.voucher.offValue) + "%"
+
+        const updateResult = await updateVoucher(token, Number(id), body.voucher)
+        if (updateResult?.meta?.code === 200) {
+            toast.success("Update voucher information successful!")
+        }
+        else toast.error("Update voucher information unsuccessful!")
     }
 
     const getData = (result: any, deviceOptions: any) => {
@@ -115,7 +125,7 @@ export default function ManagerVoucherDetail() {
                 <div className='text-2xl text-black font-bold'>Voucher Information</div>
             </div>
             <div className='px-5 py-3'>
-                <InfoDetail updateFunction={updateVoucher} data={data} buttonPermission={buttonPermission}></InfoDetail>
+                <InfoDetail updateFunction={update} data={data} buttonPermission={buttonPermission}></InfoDetail>
             </div>
 
         </div>

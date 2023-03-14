@@ -49,11 +49,4 @@ export class UpdateSupplyDto {
     @IsOptional()
     representativeId: number;
 
-    @ApiProperty({
-        type: String,
-        example: "Nguyen Ngoc Tu",
-    })
-    @IsOptional()
-    representativeName: string;
-
 }

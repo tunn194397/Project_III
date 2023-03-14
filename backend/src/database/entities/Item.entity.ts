@@ -25,6 +25,9 @@ export class Item {
     @Column({ name: 'price', type: 'int' })
     public price: number;
 
+    @Column({ name: 'import_price', type: 'int' })
+    public importPrice: number;
+
     @Column({ name: 'content', type: 'nvarchar'})
     public content: string;
 

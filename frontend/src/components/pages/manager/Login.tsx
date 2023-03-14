@@ -22,10 +22,14 @@ export default function ManagerLoginPage() {
         const response = await adminLogin(data);
         if (response.success) {
             const { token, user, permission } = response.data.data
-            console.log("Login: ", token, user, permission)
-            toast.success(response.message);
-            setAuthData?.(token, user.roleId, user, permission);
-            navigate('/manager');
+            if (user.roleId !== 6 && user.roleId !== 7) {
+                toast.success(response.message);
+                setAuthData?.(token, user.roleId, user, permission);
+                navigate('/manager/personal');
+            }
+            else {
+                toast.error("Customer cannot login in this page!");
+            }
         } else {
             toast.error(response.message);
         }
@@ -33,7 +37,7 @@ export default function ManagerLoginPage() {
 
     return (
         <div className='h-screen flex'>
-            <div className='hidden lg:flex w-full login_img_section items-center'>
+            <div className='hidden lg:flex w-full login_manager_img_section items-center'>
                 <div
                     className='
                   bg-black
@@ -45,7 +49,7 @@ export default function ManagerLoginPage() {
                     <h1 className='text-white font-bold text-4xl font-sans'>NGOCTU COMPUTER</h1>
                 </div>
             </div>
-            <div className='flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8 login_img_section'>
+            <div className='flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8 login_manager_img_section'>
                 <div className='w-full px-8 md:px-32 lg:px-24'>
                     <form className='bg-white rounded-md shadow-2xl p-5' onSubmit={handleSubmit(onSubmit)}>
                         <h1 className='text-gray-800 font-bold text-2xl mb-1'>LOGIN</h1>

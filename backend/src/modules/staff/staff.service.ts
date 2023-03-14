@@ -29,8 +29,7 @@ export class StaffService {
         const searchString = findDto.searchString || '';
         const salary = findDto.salary || '';
         const workingPeriod =  findDto.workingPeriod || '';
-
-        console.log("LL", salary, workingPeriod)
+        const staffRoleId = Number(findDto.staffRoleId) || 0;
 
         let qb = this.staffRepository.createQueryBuilder('staff')
             .innerJoin(User, 'user', 'user.id = staff.user_id')
@@ -71,6 +70,10 @@ export class StaffService {
             if (workingPeriod === '10-20') {minTime.setFullYear(thisYear - 10);maxTime.setFullYear(thisYear - 20)}
             if (workingPeriod === '>20') {minTime.setFullYear(thisYear - 20); maxTime.setFullYear(thisYear - 50)}
             qb = qb.andWhere('staff.first_worked_date >= :minTime and staff.first_worked_date <= :maxTime', {minTime: maxTime.getTime(), maxTime: minTime.getTime()})
+        }
+
+        if (staffRoleId && staffRoleId !== 0) {
+            qb= qb.andWhere('user.role_id = :staffRoleId', {staffRoleId: staffRoleId})
         }
 
         let total = await qb.select(['count(user.id) as total']).execute()
@@ -127,7 +130,7 @@ export class StaffService {
     }
 
     async createNewStaff(newUserDto: NewUserDto, newStaffDto: NewStaffDto) {
-        if (newUserDto.roleId !== 5) return new HttpException(
+        if (newUserDto.roleId !== 5 && newUserDto.roleId !== 8) return new HttpException(
             ["Invalid Role!"],
             HttpStatus.BAD_REQUEST,
         );

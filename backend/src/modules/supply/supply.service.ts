@@ -75,6 +75,11 @@ export class SupplyService {
         const totalItemData = await paginationResult.andWhere('supply.status =:status', {status: status})
             .execute()
 
+        await Promise.all(data.map(async (e: any) => {
+            const representative = await this.userRepository.findOne({id: e.representativeId})
+            e.representativeName = representative?.fullName
+        }))
+
         const totalItem = parseInt(totalItemData[0].totalItem);
         const totalPage = Math.ceil(totalItem/pageSize)
         return {

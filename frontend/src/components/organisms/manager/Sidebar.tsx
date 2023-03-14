@@ -66,7 +66,7 @@ const Sidebar: FC<Props> = ({ menuCollapse, setMenuCollapse }) => {
                               }}
                           >
                             {item.subRoute?.map((e: any) => (
-                                (e.able) ?
+                                (e.able && permission.includes(e.permission)) ?
                                     <MenuItem
                                         active={e.path === window.location.pathname}
                                         key={e.path}

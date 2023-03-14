@@ -2,16 +2,17 @@ import {useContext, useEffect, useMemo, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {IMAGES} from "../../../../utils/images/images";
 import InfoDetail from "../../../atoms/InfoDetail";
-import {getDetailCustomer, getList, getListUserWithRole} from "../../../../api/manager/customer/request";
+import {
+    getListUserWithRole,
+} from "../../../../api/manager/customer/request";
 import {AuthContext} from "../../../../context/AuthContext";
-import {getDetailSupply} from "../../../../api/manager/supply/request";
+import {getDetailSupply, updateSupply} from "../../../../api/manager/supply/request";
+import {toast} from "react-toastify";
 
 const buttonPermission = {
-    total: 'MANAGER_CUSTOMER_VIEW',
-    edit: 'MANAGER_CUSTOMER_UPDATE',
-    save: 'MANAGER_CUSTOMER_UPDATE',
-    submit: 'MANAGER_CUSTOMER_SUBMIT',
-    approve: 'MANAGER_CUSTOMER_APPROVE'
+    total: 'MANAGER_SUPPLY_VIEW',
+    edit: 'MANAGER_SUPPLY_UPDATE',
+    save: 'MANAGER_SUPPLY_UPDATE'
 }
 const statusOptions = [
     {value: 'ACTIVE', label: 'Active'},
@@ -34,14 +35,19 @@ export default function ManagerSupplyDetail() {
         navigate(`/${path}`)
     }
 
-    const updateSupply= async (body: any) => {
-        console.log("body", body)
+    const update= async (body: any) => {
+        body.supply.createdAt = (body.supply.createdAt).getTime()
+        const updateResult = await updateSupply(token, Number(id), body.supply)
+        if (updateResult?.meta?.code === 200) {
+            toast.success("Update supply information successful!")
+        }
+        else toast.error("Update supply information unsuccessful!")
     }
 
     const getData = (result: any, representativeOptions: any) => {
         const data = [
             {
-                domain: "Supply information",
+                domain: 'supply', domainTitle: "Supply information",
                 fields:  [
                     {field: "imageUrl", editable: false, name: "imageUrl", label: "", type: 'image', defaultValue: result.imageUrl},
                     {field: "name", editable: true, name: "name", label: "Name", type: 'input', defaultValue: result.name},
@@ -51,7 +57,7 @@ export default function ManagerSupplyDetail() {
                     {field: "representativeId", editable: true, name: "representativeId", label: "Representative", type: 'select', options: representativeOptions,
                         defaultValue: representativeOptions.find((c: any) => c.value === result.representativeId)
                     },
-                    {field: "createdAt", editable: true, name: "createdAt", label: "Connection date", type: 'inputTime', defaultValue: new Date(Number(result.createdAt))},
+                    {field: "createdAt", editable: false, name: "createdAt", label: "Connection date", type: 'inputTime', defaultValue: new Date(Number(result.createdAt))},
                     {field: "status", editable: true, name: "status", label: "Status", type: 'select', options: statusOptions,
                         defaultValue: statusOptions.find((c: any) => c.value === result.status)
                     }
@@ -87,7 +93,7 @@ export default function ManagerSupplyDetail() {
                 <div className='text-2xl text-black font-bold'>Supply Information</div>
             </div>
             <div className='px-5 py-3'>
-                <InfoDetail updateFunction={updateSupply} data={data} buttonPermission={buttonPermission}></InfoDetail>
+                <InfoDetail updateFunction={update} data={data} buttonPermission={buttonPermission}></InfoDetail>
             </div>
 
         </div>

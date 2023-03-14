@@ -8,10 +8,11 @@ import { Controller,  Get, Post, Body, Patch, Param, Delete, UseGuards, Query, D
 import {Causes} from "../../config/exception/causes";
 import {CreateCustomerDto} from "./dto/createCustomer.dto";
 import {UpdateDto} from "./dto/update.dto";
+import {AddCartDto} from "./dto/addCart.dto";
 
 
 @ApiBearerAuth()
-@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.staff)
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Customer')
 @Controller({
@@ -74,7 +75,6 @@ export class CustomerController {
     @ApiBody({required: true, type: UpdateDto })
     @HttpCode(HttpStatus.OK)
     update(@Param('id') id: number, @Body('') detail: UpdateDto) {
-        console.log(id, detail)
         return this.customerService.update(id, detail)
     }
 
@@ -93,5 +93,30 @@ export class CustomerController {
     restore(@Param('id') id: number) {
         return this.customerService.restore(id)
     }
+
+    @Get(':id/cart')
+    @ApiOperation({description: 'Get customer cart', summary: 'Get customer cart'})
+    @HttpCode(HttpStatus.OK)
+    getCustomerCard(@Param('id') id: number) {
+        return this.customerService.getCustomerCart(id)
+    }
+
+    @Post(':id/cart')
+    @ApiOperation({description: 'Add cart', summary: 'Add cart'})
+    @ApiParam({name: 'id', required: true, type: Number})
+    @ApiBody({required: true, type: AddCartDto })
+    @HttpCode(HttpStatus.OK)
+    addCart(@Param('id') id: number, @Body('') addCartDto: AddCartDto) {
+        return this.customerService.addItemToCart(id, addCartDto.itemId)
+    }
+
+
+    @Delete(':id/cart')
+    @ApiOperation({description: 'Delete customer cart', summary: 'Delete customer cart'})
+    @HttpCode(HttpStatus.OK)
+    deleteCustomerCard(@Query('cartId') cartId: number) {
+        return this.customerService.deleteCart(cartId)
+    }
+
 
 }

@@ -8,7 +8,7 @@ import CreatePopUp from "../../../molecules/CreatePopUp";
 import {createNewManager, getAllBranch} from "../../../../api/manager/employee/manager/request";
 
 export default function ManagerStaff() {
-    const {token} = useContext(AuthContext)
+    const {token, user} = useContext(AuthContext)
     const headers = [
         {field: 'id', title: 'id', width: 5},
         {field: 'fullName', title: 'name', width: 15},
@@ -16,8 +16,7 @@ export default function ManagerStaff() {
         {field: 'phone', title: 'phone', width: 12},
         {field: 'firstWorkedDate', title: 'first work date', width: 15},
         {field: 'workingPeriod', title: 'working period', width: 15},
-        {field: 'salary', title: 'salary', width: 15},
-        {field: '', title: 'action', width: 5},
+        {field: 'salary', title: 'salary', width: 15}
     ]
     const [data, setData] = useState([])
     const [openAdd, setOpenAdd] = useState(false)
@@ -51,7 +50,8 @@ export default function ManagerStaff() {
         orderBy: 'ASC',
         orderField: 'id',
         salary: '',
-        workingPeriod: ''
+        workingPeriod: '',
+        staffRoleId: 0
     })
     const filterArray = [
         {
@@ -91,7 +91,8 @@ export default function ManagerStaff() {
 
     useEffect(() => {
         (async () => {
-            const result = await getList(token, searchQuery);
+            const staffRoleId = (user?.roleId === 1 || user?.roleId === 2) ? 0 :(user?.roleId === 3) ? 8: (user?.roleId === 4 ? 5: 9)
+            const result = await getList(token, {...searchQuery, staffRoleId: staffRoleId});
             if (result.meta.message === 'Successful') {
                 const dataRaw = result.data.result;
                 dataRaw.map((e: any) => {
@@ -145,7 +146,9 @@ export default function ManagerStaff() {
                 pagination={pagination}
                 filterArray={filterArray}
                 setOpenAdd={setOpenAdd}
-                setSearchQuery={setSearchQuery}/>
+                setSearchQuery={setSearchQuery}
+                addPermission = {true}
+            />
             {
                 openAdd ?
                     <CreatePopUp

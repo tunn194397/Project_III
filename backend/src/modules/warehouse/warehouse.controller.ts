@@ -1,9 +1,16 @@
 import {WarehouseService} from "./warehouse.service";
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query} from "@nestjs/common";
-import {ApiBody, ApiTags} from "@nestjs/swagger";
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards} from "@nestjs/common";
+import {ApiBearerAuth, ApiBody, ApiTags} from "@nestjs/swagger";
 import {FindWarehouseDto} from "./dto/findWarehouse.dto";
+import {Roles} from "../roles/roles.decorator";
+import {RoleEnum} from "../roles/roles.enum";
+import {AuthGuard} from "@nestjs/passport";
+import {RolesGuard} from "../roles/roles.guard";
 
 @ApiTags('Warehouse')
+@ApiBearerAuth()
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller({
     path: 'warehouse',
     version: '1',

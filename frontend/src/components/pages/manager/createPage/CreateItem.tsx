@@ -23,6 +23,7 @@ export default function CreateItem() {
     const [deviceTypeToAdd, setDeviceTypeToAdd] = useState({deviceType: 0})
     const [supply, setSupply] = useState([])
     const [deviceTypes, setDeviceTypes] = useState([])
+    const [reload, setReload] = useState(true)
     const [fields, setFields] = useState([
         {
             domain: 'item', domainTitle: 'Item main information',
@@ -30,7 +31,8 @@ export default function CreateItem() {
                 {field: 'name', label: 'Name ', type: 'input', editable: true},
                 {field: 'deviceTypeId', label: 'Type', type: 'select', options: deviceTypes, editable: true},
                 {field: 'supplyId', label: 'Supplier', type: 'select', options: supply, editable: true},
-                {field: 'price', label: 'Price ', type: 'input', editable: true},
+                {field: 'importPrice', label: 'Import price (VND) ', type: 'input', editable: true},
+                {field: 'price', label: 'Price (when sale) (VND)', type: 'input', editable: true},
                 {field: 'content', label: 'Content', type: 'input', editable: true},
                 {field: 'image', label: 'Image url ', type: 'input', editable: true},
                 {field: 'introduce', label: 'Intro ', type: 'input', editable: true},
@@ -77,7 +79,7 @@ export default function CreateItem() {
             fieldToAddObject[1].fields = deviceParameterOptions
             setParamFields(fieldToAddObject)
         })()
-    }, [deviceTypeToAdd])
+    }, [deviceTypeToAdd, reload])
 
     useMemo(() => {
         (async () => {
@@ -115,8 +117,11 @@ export default function CreateItem() {
         const createResult = await createNewItem(token, {item: body.item, itemParameters: itemParameters})
         if (createResult.meta.code === 201) {
             toast.success("Create new item successfully!")
+            navigate(`/manager/items/items`)
         }
         else toast.error("Create new item unsuccessfully!")
+
+
     }
     return (
         <div className='bg-gray-100 space-y-5'>

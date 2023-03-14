@@ -5,16 +5,16 @@ import {
     DeviceType,
     ImportReceipt,
     Item,
-    ItemParameter,
+    ItemParameter, Report,
     SellReceipt,
-    Supply, Voucher, Warehouse
+    Supply, User, Voucher, Warehouse
 } from 'src/database/entities';
 import {ItemController} from "./item.controller";
 import {ItemService} from "./item.service";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Item, ItemParameter, DeviceType, Supply, DeviceParameter, SellReceipt, ImportReceipt, Voucher, Warehouse])
+        TypeOrmModule.forFeature([Item, ItemParameter, DeviceType, Supply, DeviceParameter, SellReceipt, ImportReceipt, Voucher, Warehouse, Report, User])
     ],
     controllers: [ItemController],
     providers: [ItemService],

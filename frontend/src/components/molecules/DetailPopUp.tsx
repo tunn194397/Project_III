@@ -10,7 +10,7 @@ export default function DetailPopUp(props: any) {
         criteriaMode: "all"
     });
     const onSubmit = async (body: any) => {
-        console.log("Hello")
+
     }
 
     return (

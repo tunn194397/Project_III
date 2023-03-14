@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {ICreateCustomer, IGetListCustomer, IUpdateCustomer} from "./types";
+import {ICreateCustomer, IGetListCustomer, IUpdateCustomer, IUpdateUserDto} from "./types";
 const baseAdminURL = `${process.env.REACT_APP_BE_HOST}`;
 export const getList = async (token: string | null, props: IGetListCustomer) => {
     try {
@@ -66,9 +66,44 @@ export const createNewCustomer = async (token: string | null, data: ICreateCusto
     }
 }
 
-export const updateCustomer = async (token: string | null, id: number, data: IUpdateCustomer) => {
+export const updateCustomer = async (token: string | null, id: number | undefined, data: IUpdateCustomer) => {
     try {
         const result = await axios.post(`${baseAdminURL}customer/${id}`,data, {
+            headers: {
+                accept: 'application/json',
+                authorization: `Bearer ${token}`,
+                'content-type': 'application/json'
+            }
+        });
+        return result.data
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            if (error?.response?.status === 401) {
+                return {
+                    success: false,
+                    data: null,
+                    message: 'Unauthorized'
+                };
+            } else {
+                return {
+                    success: false,
+                    data: null,
+                    message: 'Failed to create data!'
+                };
+            }
+        } else {
+            return {
+                success: false,
+                message: 'Network error',
+                data: null
+            };
+        }
+    }
+}
+
+export const updatePersonal = async (token: string | null, id: number | undefined, data: IUpdateUserDto) => {
+    try {
+        const result = await axios.patch(`${baseAdminURL}users/${id}`,data, {
             headers: {
                 accept: 'application/json',
                 authorization: `Bearer ${token}`,

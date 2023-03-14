@@ -10,7 +10,8 @@ export default function App() {
     const navigate = useNavigate()
     useEffect(() => {
         if (!isLogin) {
-            navigate('/manager/login')
+            if (window.location.href.includes('manager')) navigate('/manager/login')
+            else navigate('/user')
         }
     }, [isLogin])
     return <div>{element}</div>;

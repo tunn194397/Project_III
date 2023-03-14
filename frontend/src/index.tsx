@@ -6,14 +6,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {UserMainProvider} from "./context/UserMainContext";
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-    <AuthProvider>
-        <React.StrictMode>
-            <BrowserRouter>
-                <App />
-                <ToastContainer style={{ fontSize: 18 }} autoClose={2000} newestOnTop />
-            </BrowserRouter>
-        </React.StrictMode>
-    </AuthProvider>
+    <UserMainProvider>
+        <AuthProvider>
+            <React.StrictMode>
+                <BrowserRouter>
+                    <App />
+                    <ToastContainer style={{ fontSize: 18 }} autoClose={2000} newestOnTop />
+                </BrowserRouter>
+            </React.StrictMode>
+        </AuthProvider>
+    </UserMainProvider>
 );

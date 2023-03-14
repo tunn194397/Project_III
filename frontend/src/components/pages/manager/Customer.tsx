@@ -9,14 +9,12 @@ import CreateItemPopUp from "../../molecules/CreateItemPopUp";
 
 const headers = [
     {title: 'id', field: 'id', width: 5},
-    {title: 'name', field: 'name',width: 13},
-    {title: 'email', field: 'email',width: 15},
-    {title: 'phone',field: 'phone', width: 10},
-    {title: 'register by', field: 'registerType',width: 11},
-    {title: 'register', field: 'staff',width: 10},
-    {title: 'level', field: 'level',width: 7},
-    {title: 'score', field: 'score',width: 7},
-    {title: 'action',field: '', width: 5},
+    {title: 'name', field: 'name',width: 10},
+    {title: 'email', field: 'email',width: 10},
+    {title: 'phone',field: 'phone', width: 8},
+    {title: 'bank information',field: 'bank', width: 12},
+    {title: 'address',field: 'address', width: 10},
+    {title: 'register', field: 'staff',width: 10}
 ]
 const fieldToAdd = [
     {
@@ -28,7 +26,11 @@ const fieldToAdd = [
             {field: 'email', label: 'Personal email ', type: 'input', editable: true},
             {field: 'birthday', label: 'Birthday ', type: 'inputTime', editable: true},
             {field: 'username', label: 'Username ', type: 'input', editable: true},
-            {field: 'password', label: 'Password ', type: 'input', editable: true}
+            {field: 'password', label: 'Password ', type: 'input', editable: true},
+            {field: 'bankName', label: 'Bank ', type: 'input', editable: true},
+            {field: 'bankAccount', label: 'Bank account ', type: 'input', editable: true},
+            {field: 'bankOwner', label: 'Name of bank owner ', type: 'input', editable: true},
+            {field: 'address', label: 'Address ', type: 'input', editable: true},
         ]
     },
 ]
@@ -76,20 +78,44 @@ export default function ManagerCustomer() {
 
     useEffect(() => {
         (async () => {
-            const result = await getList(token, searchQuery);
+            let result: any;
+            if (user?.roleId === 5 || user?.roleId === 8) {
+                result = await getList(token, {...searchQuery, registerStaffId: user?.id || 0});
+            }
+            else result = await getList(token, searchQuery);
             if (result.meta.message === 'Successful') {
                 const dataRaw = result.data.result;
                 dataRaw.map((e: any) => {
-                    e.staff = e.staff?.fullName || ''
+                    e.staff = (e.staff?.fullName || '') + ` (${e.registerType})`
+                    e.bank = <div>
+                        <div>{e.bankOwner}</div>
+                        <div className='text-sm'>{e.bankName} - {e.bankAccount}</div>
+                    </div>
                 })
                 setData(dataRaw);
                 setPagination(result.data.pagination);
+
+                if (user?.roleId !== 5 && user?.roleId !== 8) {
+                    const filterArrayTmp = filterArray;
+                    if (filterArrayTmp.length === 2) filterArrayTmp.push({
+                        type: 'select', queryField: 'registerType',
+                        handleFunction: setSearchQuery,
+                        displayText: 'Register by',
+                        options: [
+                            {value: '', message: 'All'},
+                            {value: 'STAFF', message: 'Staff'},
+                            {value: 'CUSTOMER', message: 'Customer'},
+                            {value: 'MANAGER', message: 'Manager'},
+                        ]
+                    },)
+                    setFilterArray(filterArrayTmp)
+                }
             }
             else toast.error(result.message)
         })()
     }, [searchQuery, openAdd])
 
-    const filterArray = [
+    const [filterArray, setFilterArray] = useState([
         {
             type: 'input', queryField: 'searchString',
             handleFunction: setSearchQuery,
@@ -107,36 +133,25 @@ export default function ManagerCustomer() {
                 {value: 'DELETED', message: 'Deleted'},
             ]
         },
-        {
-            type: 'select', queryField: 'registerType',
-            handleFunction: setSearchQuery,
-            displayText: 'Register by',
-            options: [
-                {value: '', message: 'All'},
-                {value: 'STAFF', message: 'Staff'},
-                {value: 'CUSTOMER', message: 'Customer'},
-                {value: 'MANAGER', message: 'Manager'},
-            ]
-        },
-        {
-            type: 'select', queryField: 'level',
-            handleFunction: setSearchQuery,
-            displayText: 'Level',
-            options: [
-                {value: '', message: 'All'},
-                {value: 'NEW', message: 'New'},
-                {value: '1 YEAR', message: '1 Year'},
-                {value: '2 YEAR', message: '2 Years'},
-                {value: '5 YEAR', message: '5 years'},
-            ]
-        },
-        {
-            type: 'coupleInput',
-            minQueryField: 'minScore', maxQueryField: 'maxScore',
-            displayText: 'Score',
-            handleFunction: setSearchQuery
-        },
-    ]
+        // {
+        //     type: 'select', queryField: 'level',
+        //     handleFunction: setSearchQuery,
+        //     displayText: 'Level',
+        //     options: [
+        //         {value: '', message: 'All'},
+        //         {value: 'NEW', message: 'New'},
+        //         {value: '1 YEAR', message: '1 Year'},
+        //         {value: '2 YEAR', message: '2 Years'},
+        //         {value: '5 YEAR', message: '5 years'},
+        //     ]
+        // },
+        // {
+        //     type: 'coupleInput',
+        //     minQueryField: 'minScore', maxQueryField: 'maxScore',
+        //     displayText: 'Score',
+        //     handleFunction: setSearchQuery
+        // },
+    ])
 
     return (
         <div className='flex flex-col'>
@@ -147,7 +162,9 @@ export default function ManagerCustomer() {
                 pagination={pagination}
                 filterArray={filterArray}
                 setOpenAdd={setOpenAdd}
-                setSearchQuery={setSearchQuery}/>
+                setSearchQuery={setSearchQuery}
+                addPermission = {permission.includes('MANAGER_CUSTOMER_CREATE')}
+            />
             {
                 openAdd ?
                     <CreatePopUp

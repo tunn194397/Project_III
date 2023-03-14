@@ -5,10 +5,12 @@ import {RoleEnum} from "../roles/roles.enum";
 import {AuthGuard} from "@nestjs/passport";
 import {RolesGuard} from "../roles/roles.guard";
 import { Controller,  Get, Post, Body, Patch, Param, Delete, UseGuards, Query, DefaultValuePipe, ParseIntPipe, HttpStatus, HttpCode} from '@nestjs/common';
-import {FindUserDto} from "../../shared/request/findUser.dto";
 
 
 @ApiTags('Device')
+@ApiBearerAuth()
+@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller({
     path: 'device',
     version: '1',

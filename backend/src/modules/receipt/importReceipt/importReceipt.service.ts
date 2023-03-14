@@ -9,10 +9,8 @@ import {Repository} from "typeorm";
 import {FindReceiptDto} from "./dto/findReceipt.dto";
 import {CreateImportReceiptDto} from "./dto/createImportReceipt.dto";
 import {CreateImportItemReceiptDto} from "./dto/createImportItemReceipt.dto";
-import {UpdateImportReceiptDto} from "./dto/updateImportReceipt.dto";
-import {UpdateImportItemReceiptDto} from "./dto/updateImportItemReceipt.dto";
 import {UpdateTotalImportReceiptDto} from "./dto/updateTotalImportReceipt.dto";
-import {FindHomeDataDto} from "../../item/dto/findHomeData.dto";
+import {FindHomeDataDto} from "../../item/dto/findHomeData.dto";;
 
 @Injectable()
 export class ImportReceiptService {
@@ -36,7 +34,6 @@ export class ImportReceiptService {
 
     async getList(findReceiptDto: FindReceiptDto ) {
         const {page, pageSize, supplyId, minPrice, maxPrice, minSaleOff, maxSaleOff, searchString, orderField, orderBy} = findReceiptDto
-        console.log("debug", minPrice, maxPrice, minSaleOff, maxSaleOff, supplyId)
         let qb = this.importReceiptRepository.createQueryBuilder('ir')
             .select([
                 'ir.id as id',
@@ -69,6 +66,7 @@ export class ImportReceiptService {
 
         if (orderField === 'finalPrice') qb = qb.orderBy('ir.final_price', orderBy === 'ASC' ? 'ASC' : 'DESC')
         else if (orderField === 'saleOff') qb = qb.orderBy('ir.sale_off', orderBy === 'ASC' ? 'ASC' : 'DESC')
+        else qb = qb.orderBy('ir.id', 'DESC')
 
         const result = await qb.offset(pageSize* (page-1)).limit(pageSize).execute();
         await Promise.all(result.map(async (e: any) => {
@@ -113,7 +111,7 @@ export class ImportReceiptService {
         const newItems : any[] = [];
         await Promise.all(items.map(async (e: any) => {
             const item = await this.itemRepository.findOne({id: e.itemId})
-            newItems.push({...e, name: item.name})
+            newItems.push({...e, item: item})
         }))
         const supply = await this.supplyRepository.findOne({id: receipt.supplyId})
         return {
@@ -201,12 +199,18 @@ export class ImportReceiptService {
             importItemReceipt.map((importItem: any) => {
                 if (itemImportCount.find((c: any) => c.itemId === importItem.itemId)) {
                     itemImportCount.map((x: any) => {
-                        if (x.itemId === importItem.itemId) x.quantity += importItem.quantity
+                        if (x.itemId === importItem.itemId) {
+                            x.quantity += importItem.quantity
+                            if (x.createdAt <=  e.createdAt) {
+                                x.createdAt =  e.createdAt
+                            }
+                        }
                     })
                 }
                 else itemImportCount.push({
                     itemId: importItem.itemId,
-                    quantity: importItem.quantity
+                    quantity: importItem.quantity,
+                    createdAt: e.createdAt
                 });
                 itemImportQuantity += importItem.quantity
             })
@@ -219,6 +223,48 @@ export class ImportReceiptService {
             e.item = await this.itemRepository.findOne({id: e.itemId})
             e.item.supply = await this.supplyRepository.findOne({id: e.item.supplyId})
         }))
+
+        const warehouse = await this.warehouseRepository.createQueryBuilder('warehouse')
+            .getMany()
+        await Promise.all(warehouse.map( async (e: any) => {
+            e.item = await this.itemRepository.findOne({id: e.itemId})
+        }))
+
+        // Get list data of month
+        const monthFinished = new Date(Number(finishedAt)).getMonth(), yearFinished = new Date(Number(finishedAt)).getFullYear();
+        let listMonths : any[] = []
+        for (let i = 0; i < 12; i ++) {
+            if (i > monthFinished) listMonths.push({id: i-monthFinished -1, month: i + 1, year: yearFinished -1, startedAt: new Date(yearFinished -1, i, 1,0,0,0).getTime(), finishedAt: new Date(yearFinished -1, i+1, 1,0,0,0).getTime() -1  })
+            else listMonths.push({id: 12-monthFinished +i, month: i + 1, year: yearFinished, startedAt: new Date(yearFinished , i, 1,0,0,0).getTime(), finishedAt: new Date(yearFinished, i+1, 1,0,0,0).getTime() -1  })
+        }
+        listMonths = listMonths.sort((a,b ) => {if (a.id < b.id) {return -1} else return 1})
+
+        const monthlyData: any[] = []
+        for (const month of listMonths) {
+            const importReceipt = await this.importReceiptRepository.createQueryBuilder('import')
+                .where('import.created_at >= :startedAt and import.created_at <= :finishedAt', {startedAt: month.startedAt, finishedAt: month.finishedAt})
+                .getMany();
+            let monthValue = 0, monthItemQty = 0;
+            await Promise.all(importReceipt.map( async (e: any) => {
+                const importItemReceipts = await this.importItemReceiptRepository.find({
+                    importReceiptId: e.id,
+                })
+                monthValue += e.finalPrice
+                importItemReceipts.map((importItem: any) => {
+                    monthItemQty += importItem.quantity;
+                })
+            }))
+
+            monthlyData.push({
+                month: month.month,
+                year: month.year,
+                id: month.id,
+                monthValue: monthValue,
+                monthItemQty : monthItemQty,
+                monthReceiptQty: importReceipt.length
+            })
+        }
+
         const importReceiptCountResult = {
             receipts: newImportReceipt,
             countReceipt : importReceipt.length,
@@ -227,6 +273,10 @@ export class ImportReceiptService {
             itemImportCount: itemImportCount.sort((a,b ) => {if (a.quantity > b.quantity) {return -1} else return 1}),
             itemsMaxCount: itemImportCount.sort((a,b ) => {if (a.quantity > b.quantity) {return -1} else return 1}).slice(0,5),
             itemsMaxValue: itemImportCount.sort((a,b ) => {if (a.quantity * a.item.price > b.quantity * b.item.price) {return -1} else return 1}).slice(0,5),
+            itemsMinCount: itemImportCount.sort((a,b ) => {if (a.quantity < b.quantity) {return -1} else return 1}).slice(0,5),
+            itemsMinValue: itemImportCount.sort((a,b ) => {if (a.quantity * a.item.price < b.quantity * b.item.price) {return -1} else return 1}).slice(0,5),
+            warehouse: warehouse,
+            monthlyData: monthlyData
         }
 
         return {

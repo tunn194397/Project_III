@@ -62,4 +62,12 @@ export class FindStaffDto {
     @IsOptional()
     orderBy: string;
 
+    @ApiProperty({
+        type: String,
+        example: 5,
+        required: false
+    })
+    @IsOptional()
+    staffRoleId: number;
+
 }

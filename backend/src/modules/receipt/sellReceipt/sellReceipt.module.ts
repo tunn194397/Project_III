@@ -9,14 +9,14 @@ import {
     Voucher,
     Customer,
     Staff,
-    Manager
+    Manager, CustomerCart
 } from 'src/database/entities';
 import {SellReceiptController} from "./sellReceipt.controller";
 import {SellReceiptService} from "./sellReceipt.service";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([SellReceipt, SellItemReceipt, Item, User, Warehouse, Voucher, Customer, Staff, Manager])
+        TypeOrmModule.forFeature([SellReceipt, SellItemReceipt, Item, User, Warehouse, Voucher, Customer, Staff, Manager, CustomerCart])
     ],
     controllers: [SellReceiptController],
     providers: [SellReceiptService],

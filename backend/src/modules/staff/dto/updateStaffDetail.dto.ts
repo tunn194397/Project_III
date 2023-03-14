@@ -23,7 +23,7 @@ export class UpdateStaffDetailDto {
         type: UpdateStaffDto,
         example:{
             branchId: 1,
-            firstWorkedDate: '12/18/2019',
+            firstWorkedDate: 10000000000000,
             workingPeriod: '8 years',
             salary: 2000000
         }

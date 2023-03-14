@@ -1,20 +1,16 @@
 import {useContext, useEffect, useMemo, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {IMAGES} from "../../../../utils/images/images";
-import InfoDetail from "../../../atoms/InfoDetail";
-import {getDetailCustomer, getList} from "../../../../api/manager/customer/request";
-import {toast} from "react-toastify";
 import {AuthContext} from "../../../../context/AuthContext";
-import {getAllBranch, getDetailManager} from "../../../../api/manager/employee/manager/request";
 import {getDetailItem} from "../../../../api/manager/item/item/request";
 import InfoItemDetail from "../../../atoms/InfoItemDetail";
 
 const buttonPermission = {
-    total: 'MANAGER_CUSTOMER_VIEW',
-    edit: 'MANAGER_CUSTOMER_UPDATE',
-    save: 'MANAGER_CUSTOMER_UPDATE',
-    submit: 'MANAGER_CUSTOMER_SUBMIT',
-    approve: 'MANAGER_CUSTOMER_APPROVE'
+    total: 'MANAGER_ITEM_VIEW',
+    edit: 'MANAGER_ITEM_UPDATE',
+    save: 'MANAGER_ITEM_UPDATE',
+    submit: 'MANAGER_ITEM_SUBMIT',
+    approve: 'MANAGER_ITEM_APPROVE'
 }
 const statusOptions = [
     {value: 'NEW', label: 'New'},
@@ -29,6 +25,7 @@ export default function ManagerItemDetail() {
     const navigate = useNavigate()
     const firstData: any[] = [];
     const [data, setData] = useState(firstData)
+    const [isEdit, setIsEdit] = useState(false)
     const handleBack = () =>  {
         const idLength = String(id).length;
         const currentPathLength = String(window.location.href).length
@@ -38,25 +35,26 @@ export default function ManagerItemDetail() {
     }
 
     const updateItem= async (body: any) => {
-        console.log("body", body)
     }
 
     const getData = (result: any) => {
         const data = [
             {
-                domain: "Item main information",
+                domain: 'item', domainTitle: "Item main information",
                 fields:  [
                     {field: "image", editable: true, name: "image", label: "", type: 'image', defaultValue: result.image},
-                    {field: "branch", editable: false, name: "branch", label: "Branch", type: 'input', defaultValue: result.branch},
-                    {field: "name", editable: false, name: "name", label: "Item name", type: 'input', defaultValue: result.name},
+                    {field: "branch", editable: true, name: "branch", label: "Branch", type: 'input', defaultValue: result.branch},
+                    {field: "name", editable: true, name: "name", label: "Item name", type: 'input', defaultValue: result.name},
                     {field: "content", editable: true, name: "content", label: "Content", type: 'input',  defaultValue: result.content},
                     {field: "introduce", editable: true, name: "introduce", label: "Introduce", type: 'input', defaultValue: result.introduce},
                     {field: "type", editable: true, name: "type", label: "Type", type: 'input', defaultValue: result.type},
                     {field: "productionTime", editable: true, name: "productionTime", label: "Production time", type: 'inputTime', defaultValue: new Date(Number(result.productionTime))},
-                    {field: "productionCode", editable: true, name: "productionCode", label: "Production Code", type: 'input', defaultValue: result.productionCode},
+                    {field: "productionCode", editable: true, name: "productionCode", label: "Production code", type: 'input', defaultValue: result.productionCode},
+                    {field: "importPrice", editable: false, name: "importPrice", label: "Price when import from supply (VND)", type: 'input', defaultValue: result.importPrice},
+                    {field: "price", editable: true, name: "price", label: "Price when sale (VND)", type: 'input', defaultValue: result.price},
                     {field: "status", editable: true, name: "status", label: "Status", type: 'select', options: statusOptions,
                         defaultValue: statusOptions.find((c: any) => c.value === result.status)
-                    }
+                    },
                 ]
             }
         ]
@@ -64,23 +62,22 @@ export default function ManagerItemDetail() {
         const fieldOfIntro : any[] = [];
         const fieldOfParam : any[] = [];
         result.parameter.map((e: any) => {
-            if (e.value) fieldOfIntro.push({field: "Param" + e.id, editable: false, name: "No", label:e.deviceParameterName, type: "input", defaultValue: e.value})
-            fieldOfParam.push({field: "Param" + e.id, editable: false,  name: "No", label:e.deviceParameterName, type: "input", defaultValue: e.detail})
+            if (e.value) fieldOfIntro.push({field: e.id, editable: true, name: "No", label:e.deviceParameterName, type: "input", defaultValue: e.value})
+            fieldOfParam.push({field: e.id, editable: true,  name: "No", label:e.deviceParameterName, type: "input", defaultValue: e.detail})
         })
 
-        data.push({domain: 'Intro', fields: fieldOfIntro}, {domain: 'Parameters Detail', fields: fieldOfParam})
+        data.push({domain: 'itemIntros', domainTitle: 'Introduction', fields: fieldOfIntro}, {domain: 'itemParams', domainTitle: 'Parameters Detail', fields: fieldOfParam})
 
         return data;
     }
-    useMemo(() => {
+    useEffect(() => {
         (async () => {
             const idNumber = Number(id)
             const result = await getDetailItem(token, idNumber);
 
-            console.log("data", result.data)
             setData(getData(result.data))
         })()
-    }, [])
+    }, [isEdit])
 
     return (
         <div className='flex flex-col space-y-5'>
@@ -92,7 +89,7 @@ export default function ManagerItemDetail() {
             </div>
             <div className='px-5 py-3 flex flex-row'>
                 <div className='grid-cols-2'>
-                    <InfoItemDetail updateFunction={updateItem} data={data} buttonPermission={buttonPermission}></InfoItemDetail>
+                <InfoItemDetail id={id} updateFunction={updateItem} data={data} buttonPermission={buttonPermission} isEdit={isEdit} setIsEdit={setIsEdit}></InfoItemDetail>
                 </div>
             </div>
 

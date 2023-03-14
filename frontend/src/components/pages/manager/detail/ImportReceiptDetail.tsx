@@ -29,7 +29,7 @@ export default function ManagerImportReceiptDetail() {
         items: [],
         note: '',
         supplyId: 0,
-        supply: {name: ""},
+        supply: {name: "", imageUrl: ''},
         totalPrice: 0,
         updatedAt: 0,
         saleOff: 0
@@ -59,62 +59,85 @@ export default function ManagerImportReceiptDetail() {
                 </button>
                 <div className='text-2xl text-black font-bold'>Import Receipt Information</div>
             </div>
-            <div className='bg-white flex flex-col px-10 py-10 w-full space-y-14 border-2 border-gray-200 rounded-lg'>
+            <div className='overflow-y-auto space-y-28 px-14 py-10 bg-white border-2 border-gray-200 rounded-lg'>
                 <div className='flex flex-col space-y-5'>
-                    <div className="text-lg font-semibold underline"> Receipt Detail </div>
-                    <div className='grid grid-cols-3 space-y-2 px-4 items-center w-1/2'>
-                        <div className='col-span-1 font-semibold'>Content:</div>
-                        <div className='col-span-2'>{data.content}</div>
+                    <div className='flex flex-col bg-white space-y-4 '>
+                        <div className='grid grid-cols-3'>
+                            <div className='flex flex-col space-y-2 col-span-2'>
+                                <div className="text-lg font-semibold underline">Receipt main information </div>
+                                <div className='grid grid-cols-4 gap-2 px-4 items-center '>
+                                    <div className='col-span-1 font-semibold'>Content:</div>
+                                    <div className='col-span-3'>{data.content}</div>
 
-                        <div className='col-span-1 font-semibold'>Time:</div>
-                        <div className='col-span-2'>{new Date(Number(data.createdAt)).toLocaleString()}</div>
+                                    <div className='col-span-1 font-semibold'>Time:</div>
+                                    <div className='col-span-3'>{new Date(Number(data.createdAt)).toLocaleString()}</div>
 
-                        <div className='col-span-1 font-semibold'>Note:</div>
-                        <div className='col-span-2'>{data.note}</div>
+                                    <div className='col-span-1 font-semibold'>Note:</div>
+                                    <div className='col-span-3'>{data.note}</div>
 
-                        <div className='col-span-1 font-semibold'>Sale Off:</div>
-                        <div className='col-span-2'>{data.saleOff + " %"}</div>
+                                    <div className='col-span-1 font-semibold'>Sale Off:</div>
+                                    <div className='col-span-3'>{data.saleOff + " %"}</div>
 
-                        <div className='col-span-1 font-semibold'>Total Price:</div>
-                        <div className='col-span-2'> {data.totalPrice?.toLocaleString() + " VND"}</div>
+                                    <div className='col-span-1 font-semibold'>Total Price:</div>
+                                    <div className='col-span-3'> {data.totalPrice?.toLocaleString() + " VND"}</div>
 
-                        <div className='col-span-1 font-semibold'>Final Price:</div>
-                        <div className='col-span-2'>{data.finalPrice?.toLocaleString() + " VND"}</div>
+                                    <div className='col-span-1 font-semibold'>Final Price:</div>
+                                    <div className='col-span-3'>{data.finalPrice?.toLocaleString() + " VND"}</div>
 
-                        <div className='col-span-1 font-semibold'>Supply:</div>
-                        <div className='col-span-2'>{data.supply.name}</div>
+                                    <div className='col-span-1 font-semibold'>Supply:</div>
+                                    <div className='col-span-3'>{data.supply.name}</div>
+                                </div>
+                            </div>
+                            <div className='col-span-1 w-full'>
+                                <img className='w-full' src={data.supply.imageUrl}/>
+                            </div>
+                        </div>
+                        <br/>
                     </div>
-                </div>
-                <hr/>
-                <div className='flex flex-col space-y-5'>
-                    <div className="text-lg font-semibold underline"> Item Imported in Receipt </div>
-                    <div className='grid grid-cols-3 gap-3'>
-                        {
-                            data.items.map((e: any) => {
-                                return (
-                                    <div className='grid grid-cols-4 border-2 border-gray-200 rounded-md space-x-3 px-2 py-2' key={e.id}>
-                                        <div className='flex flex-col col-span-3'>
-                                            <div> Item </div>
-                                            <input
-                                                className="border rounded w-full py-2 px-3 text-gray-700 outline-none text-sm focus:border-blue-500 focus:border-2"
-                                                type="text"
-                                                defaultValue={e.name}
-                                                disabled={true}
-                                            />
+
+                    <div className='text-xl underline font-bold'>Items</div>
+                    <div className='flex flex-row items-start space-x-3'>
+                        <div className='w-full grid grid-cols-1'>
+                            {
+                                <div className=" text-lg font-bold text-white bg-blue-400 grid grid-cols-12 gap-2 px-3 py-1.5">
+                                    <div className='col-span-2'> Image </div>
+                                    <div className='col-span-4'> Items </div>
+                                    <div className='col-span-2'> Price </div>
+                                    <div className='col-span-2'> Quantity </div>
+                                    <div className='col-span-2'> Final price </div>
+                                </div>
+                            }
+                            {
+                                data.items.map((item: any) => {
+                                    return (
+                                        <div className='grid grid-cols-12 bg-white space-y-2 border-2 border-gray-200 items-center' key={item.itemId}>
+                                            <div className='col-span-2 px-2 py-2'>
+                                                <div className="">
+                                                    <img
+                                                        src={item.item.image}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className='col-span-4 px-2 py-2'>
+                                                {item.item.name}
+                                            </div>
+                                            <div className='col-span-2 px-2 py-2 text-blue-500 font-semibold'>
+                                                {item.item.price.toLocaleString() + "VND"}
+                                            </div>
+                                            <div className='col-span-2 px-2 py-2'>
+                                                {item.quantity}
+                                            </div>
+                                            <div className='col-span-2 px-2 py-2 text-blue-500 font-semibold'>
+                                                {(item.item.price * item.quantity* (1-(item.voucher?.offValue/100 || 0))).toLocaleString() + "VND"}
+                                            </div>
                                         </div>
-                                        <div className='flex flex-col col-span-1'>
-                                            <div> Quantity </div>
-                                            <input
-                                                className="border rounded w-full py-2 px-3 text-gray-700 outline-none text-sm focus:border-blue-500 focus:border-2"
-                                                type="text"
-                                                defaultValue={e.quantity}
-                                                disabled={true}
-                                            />
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                    <div className='flex flex-row px-5 justify-end text-xl font-bold text-blue-600'>
+                        Total price of all receipt: {data.finalPrice.toLocaleString() + " VND"}
                     </div>
                 </div>
             </div>

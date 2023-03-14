@@ -28,7 +28,7 @@ const branchOptions = [
     {value: "Dragon", label: "Dragon", message: "Dragon"},
 ]
 export default function ManagerVoucher() {
-    const {token} = useContext(AuthContext)
+    const {token, user, permission} = useContext(AuthContext)
     const headers = [
         {title: 'id', field: 'id', width: 3},
         {title: 'content', field: 'content', width: 15},
@@ -36,8 +36,7 @@ export default function ManagerVoucher() {
         {title: 'for type', field: 'deviceType',width: 15},
         {title: 'time',field: 'time', width: 12},
         {title: 'status',field: 'status', width: 12},
-        {title: 'off value',field: 'offString', width: 10},
-        {title: 'action', field: '',width: 5},
+        {title: 'off value',field: 'offString', width: 10}
     ]
     const [data, setData] = useState([])
     const [openAdd, setOpenAdd] = useState(false)
@@ -178,6 +177,7 @@ export default function ManagerVoucher() {
                 pagination={pagination}
                 filterArray={filterArray}
                 setOpenAdd={setOpenAdd}
+                addPermission = {permission.includes('MANAGER_VOUCHER_CREATE')}
                 setSearchQuery={setSearchQuery}/>
             {
                 openAdd ?

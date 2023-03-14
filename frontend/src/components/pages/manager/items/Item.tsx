@@ -13,17 +13,17 @@ import {useNavigate} from "react-router-dom";
 import SearchBarWithCreatePage from "../../../atoms/SearchBarWithCreatePage";
 
 export default function ManagerItem() {
-    const {token} = useContext(AuthContext)
+    const {token, user, permission} = useContext(AuthContext)
     const navigate = useNavigate()
     const headers = [
         {title: 'id', field: 'id',width: 3},
+        {title: 'image', field: 'image', width: 8, type: 'image'},
         {title: 'product code ', field: 'productionCode',width: 10},
         {title: 'product time', field: 'productionTime',width: 9},
         {title: 'name', field: 'name',width: 14},
-        {title: 'image', field: 'image', width: 8, type: 'image'},
         {title: 'price', field: 'price',width: 10},
-        {title: 'supply ', field: 'supply',width: 5},
-        {title: 'action', field: '',width: 5},
+        {title: 'remain', field: 'remain',width: 3},
+        {title: 'supply', field: 'supply',width: 5}
     ]
     const [data, setData] = useState([])
     const [pagination, setPagination] = useState({})
@@ -55,6 +55,7 @@ export default function ManagerItem() {
                 const dataRaw = result.data.result;
                 dataRaw.map((e: any) => {
                     e.supply = e.supply.name
+                    e.price = e.price.toLocaleString() + " VND"
                     e.branch = e.branch || 'Local branch';
                     e.productionTime = <div>
                         <div>{(new Date(Number(e.productionTime))).toLocaleDateString()}</div>
@@ -73,6 +74,7 @@ export default function ManagerItem() {
                     e.parameter = e.parameter.map((param: any) => {
                         if (param.value) return <div className='text-xs'><b>{param.paramName}</b>: {param.value}</div>
                     })
+                    e.remain = e.warehouse?.remainQuantity || 0;
                 })
                 setData(dataRaw);
                 setPagination(result.data.pagination);
@@ -140,9 +142,9 @@ export default function ManagerItem() {
         <div className='flex flex-col'>
             <div className='text-2xl text-black font-bold ml-3 mb-5'>Items Management</div>
             <div className = 'flex flex-col bg-white mt-3 py-6 space-y-8 rounded-xl border-[1px] border-gray-300 '>
-                <SearchBarWithCreatePage filterArray={filterArray} handleAdd={changeToCreatePage}/>
+                <SearchBarWithCreatePage filterArray={filterArray} handleAdd={changeToCreatePage} addPermission={permission.includes('MANAGER_ITEM_CREATE')}/>
                 <div>
-                    <div className = "flex flex-row">
+                    <div className = "flex flex-row mx-2">
                         <button className={gridView? inactiveButtonClassName: activeButtonClassName} onClick={() => setGridView(false)}>
                             <svg height={15} width={15}>{IMAGES.icon.table}</svg>
                             <div>Table</div>

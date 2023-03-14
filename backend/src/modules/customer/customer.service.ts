@@ -1,17 +1,27 @@
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
-import {Customer, Manager, Staff, Supply, User} from "../../database/entities";
+import {Customer, Item, Manager, Staff, Supply, User, Warehouse} from "../../database/entities";
 import {Brackets, Repository} from "typeorm";
 import {NewUserDto} from "../manager/dto/newUser.dto";
 import {NewCustomerDto} from "./dto/newCustomer.dto";
 import * as bcrypt from 'bcrypt';
 import {UpdateDto} from "./dto/update.dto";
+import {CustomerCart} from "../../database/entities/CustomerCart.entity";
 
 @Injectable()
 export class CustomerService {
     constructor(
         @InjectRepository(Customer)
         private customerRepository: Repository<Customer>,
+
+        @InjectRepository(CustomerCart)
+        private customerCartRepository: Repository<CustomerCart>,
+
+        @InjectRepository(Item)
+        private itemRepository: Repository<Item>,
+
+        @InjectRepository(Warehouse)
+        private warehouseRepository: Repository<Warehouse>,
 
         @InjectRepository(User)
         private userRepository: Repository<User>,
@@ -28,7 +38,7 @@ export class CustomerService {
         if (!page) page = 1;
         if (!pageSize) pageSize = 10;
         let result = this.userRepository.createQueryBuilder('user')
-            .innerJoin(Customer, 'customer', 'customer.user_id = user.id')
+            .leftJoin(Customer, 'customer', 'customer.user_id = user.id')
             .select([
                 'user.id as id',
                 'user.full_name as name',
@@ -45,7 +55,11 @@ export class CustomerService {
                 'customer.register_type as registerType',
                 'customer.register_staff_id as registerStaffId',
                 'customer.level as level',
-                'customer.score as score'
+                'customer.score as score',
+                'user.bankName as bankName',
+                'user.bankAccount as bankAccount',
+                'user.bankOwner as bankOwner',
+                'user.address as address',
             ])
             .where(new Brackets(qb => {
                 qb.where('user.full_name like :searchString', {searchString: `%${searchString}%`})
@@ -56,7 +70,7 @@ export class CustomerService {
             .andWhere('user.role_id = 6')
 
         let paginationResult = this.userRepository.createQueryBuilder('user')
-            .innerJoin(Customer, 'customer', 'customer.user_id = user.id')
+            .leftJoin(Customer, 'customer', 'customer.user_id = user.id')
             .select('count(user.id) as totalItem')
             .where(new Brackets(qb => {
                 qb.where('user.full_name like :searchString', {searchString: `%${searchString}%`})
@@ -98,6 +112,7 @@ export class CustomerService {
             .offset(pageSize*(page-1))
             .limit(pageSize)
             .execute()
+
         await Promise.all(data.map( async (e: any) => {
             if (e.registerType === 'STAFF' || e.registerType === 'MANAGER') {
                 const staff = await this.userRepository.findOne({where: {id: e.registerStaffId}})
@@ -134,6 +149,10 @@ export class CustomerService {
                 'user.first_name as firstName',
                 'user.last_name as lastName',
                 'user.status as status',
+                'user.bank_name as bankName',
+                'user.bank_account as bankAccount',
+                'user.bank_owner as bankOwner',
+                'user.address as address'
             ])
             .where('user.id = :id', {id: id})
             .execute()
@@ -155,7 +174,7 @@ export class CustomerService {
             const staff = await this.staffRepository.findOne({
                 where: {userId: newCustomer.registerStaffId}
             })
-            if (!staff) return new HttpException(
+            if (!staff) throw new HttpException(
                 ["Staff not found!"],
                 HttpStatus.BAD_REQUEST,
             );
@@ -164,12 +183,21 @@ export class CustomerService {
             const staff = await this.managerRepository.findOne({
                 where: {userId: newCustomer.registerStaffId}
             })
-            if (!staff) return new HttpException(
+            if (!staff) throw new HttpException(
                 ["Manager not found!"],
                 HttpStatus.BAD_REQUEST,
             );
         }
 
+        const oldUser = await this.userRepository.createQueryBuilder('user')
+            .where('user.username = :username', {username: newUser.username})
+            .orWhere('user.email = :email', {email: newUser.email})
+            .orWhere('user.phone = :phone', {phone: newUser.phone})
+            .execute()
+        if (oldUser.length) throw new HttpException(
+            ["User have email or phone or username is existed!"],
+            HttpStatus.BAD_REQUEST,
+        );
         const userDto = this.userRepository.create({...newUser, fullName: newUser.firstName + ' ' + newUser.lastName});
         const saltOrRounds = 10;
         userDto.passwordHash =  await bcrypt.hash(
@@ -231,6 +259,49 @@ export class CustomerService {
             .update(Supply)
             .set({status: 'ACTIVE'})
             .where({id: id, status: 'DELETED'})
+            .execute()
+    }
+
+    async getCustomerCart(id: number) {
+        const carts = await this.customerCartRepository.createQueryBuilder('customer_cart')
+            .where('customer_cart.customer_id = :id', {id: id})
+            .getMany()
+
+        let result = {
+            userId: id,
+            carts: []
+        }
+        await Promise.all(carts.map(async (e: any) => {
+            const item = await this.itemRepository.findOne({id: e.itemId})
+            const warehouse = await this.warehouseRepository.findOne({itemId: e.itemId})
+            result.carts.push({itemId:e.itemId, quantity: e.quantity, item: item, cartId: e.id, remainQuantity: warehouse?.remainQuantity || 0})
+        }))
+
+        return result
+    }
+
+    async addItemToCart(id: number, itemId: number) {
+        const item = await this.itemRepository.findOne({id: itemId})
+        if (!item) return new HttpException(
+            ['Item not found!'],
+            HttpStatus.BAD_REQUEST
+        )
+
+        const cart = await this.customerCartRepository.findOne({userId: id, itemId: itemId})
+        if (cart) return new HttpException(
+            ['Cart existed!'],
+            HttpStatus.BAD_REQUEST
+        )
+
+        const newCart = this.customerCartRepository.create({userId: id, itemId: itemId})
+        return await this.customerCartRepository.save(newCart)
+    }
+
+    async deleteCart(id: number) {
+        return await this.customerRepository.createQueryBuilder('cart')
+            .delete()
+            .from(CustomerCart)
+            .where({id: id})
             .execute()
     }
 

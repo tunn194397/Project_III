@@ -32,7 +32,7 @@ export interface ICreateCustomer {
     newCustomerDto: INewCustomerDto
 }
 
-interface IUpdateUserDto {
+export interface IUpdateUserDto {
     firstName: string,
     lastName: string,
     phone: string,
