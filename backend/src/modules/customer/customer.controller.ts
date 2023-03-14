@@ -10,10 +10,6 @@ import {CreateCustomerDto} from "./dto/createCustomer.dto";
 import {UpdateDto} from "./dto/update.dto";
 import {AddCartDto} from "./dto/addCart.dto";
 
-
-@ApiBearerAuth()
-@Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
-@UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Customer')
 @Controller({
     path: 'customer',
@@ -23,6 +19,10 @@ export class CustomerController {
     constructor(private readonly customerService: CustomerService) {}
 
     @Get('')
+
+    @ApiBearerAuth()
+    @Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOperation({description: 'Get list', summary: 'Get list'})
     @HttpCode(HttpStatus.OK)
     @ApiQuery({name : 'page', required: false})
@@ -53,6 +53,10 @@ export class CustomerController {
     }
 
     @Get(':id')
+
+    @ApiBearerAuth()
+    @Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOperation({description: 'Get detail', summary: 'Get detail'})
     @HttpCode(HttpStatus.OK)
     getDetail(@Param('id') id: number) {
@@ -70,6 +74,10 @@ export class CustomerController {
     }
 
     @Post(':id')
+
+    @ApiBearerAuth()
+    @Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOperation({description: 'Update', summary: 'Update'})
     @ApiParam({name: 'id', required: true, type: Number})
     @ApiBody({required: true, type: UpdateDto })
@@ -79,6 +87,10 @@ export class CustomerController {
     }
 
     @Delete(':id')
+
+    @ApiBearerAuth()
+    @Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiParam({name: 'id', required: true, type: Number})
     @ApiOperation({description: 'Delete', summary: 'Delete'})
     @HttpCode(HttpStatus.OK)
@@ -95,6 +107,10 @@ export class CustomerController {
     }
 
     @Get(':id/cart')
+
+    @ApiBearerAuth()
+    @Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOperation({description: 'Get customer cart', summary: 'Get customer cart'})
     @HttpCode(HttpStatus.OK)
     getCustomerCard(@Param('id') id: number) {
@@ -102,6 +118,10 @@ export class CustomerController {
     }
 
     @Post(':id/cart')
+
+    @ApiBearerAuth()
+    @Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOperation({description: 'Add cart', summary: 'Add cart'})
     @ApiParam({name: 'id', required: true, type: Number})
     @ApiBody({required: true, type: AddCartDto })
@@ -112,6 +132,10 @@ export class CustomerController {
 
 
     @Delete(':id/cart')
+
+    @ApiBearerAuth()
+    @Roles(RoleEnum.superAdmin, RoleEnum.supplyManager, RoleEnum.superManager, RoleEnum.sellManager, RoleEnum.sellStaff, RoleEnum.supplyStaff, RoleEnum.user)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOperation({description: 'Delete customer cart', summary: 'Delete customer cart'})
     @HttpCode(HttpStatus.OK)
     deleteCustomerCard(@Query('cartId') cartId: number) {
