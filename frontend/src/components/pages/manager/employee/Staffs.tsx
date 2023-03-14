@@ -111,7 +111,7 @@ export default function ManagerStaff() {
 
     const handleCreateNew = async (body: any) => {
         body.newUserDto.birthday = (body.newUserDto.birthday).getTime()
-        body.newUserDto.roleId = 5
+        body.newUserDto.roleId = (user?.roleId === 3) ? 8: 5
         body.newStaffDto.firstWorkedDate = (body.newStaffDto.firstWorkedDate).getTime()
         body.newStaffDto.salary = Number(body.newStaffDto.salary)
         body.newUserDto.status = 'ACTIVE'

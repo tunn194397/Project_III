@@ -226,7 +226,7 @@ export default function UserCart() {
                             handleCreateNew={handleAddBankAccount}
                         ></CreatePopUp>
                         :
-                        <div className='fixed mx-auto my-auto inset-0 py-3 overflow-y-auto w-2/5 bg-gray-100 shadow-gray-300 shadow-xl rounded-lg'>
+                        <div className='fixed mx-auto inset-0 py-3 overflow-y-auto w-2/5 h-[550px] bg-gray-100 shadow-gray-300 shadow-xl rounded-lg'>
                             <div className="flex flex-col px-5 py-3 space-y-2">
                                 <div className='flex flex-col space-y-5'>
                                     <div className='font-semibold text-lg underline'> Items </div>
