@@ -63,6 +63,10 @@ export class Causes {
         ["User does not exist or User has been't activated"],
         HttpStatus.BAD_REQUEST,
     );
+    public static CREATE_USER_FAILED = new HttpException(
+        ["Create user failed!"],
+        HttpStatus.INTERNAL_SERVER_ERROR,
+    );
     /**
      * address
      */
@@ -198,26 +202,7 @@ export class Causes {
         HttpStatus.BAD_REQUEST,
     );
 
-    /* Teams */
-    public static TEAM_NOT_FOUND = new HttpException(
-        'Team not found with the filter',
-        HttpStatus.NOT_FOUND,
-    );
 
-    /* Matches */
-    public static MATCH_NOT_FOUND = new HttpException(
-        'Matche not found with the filter',
-        HttpStatus.NOT_FOUND,
-    );
 
-    /* Matches */
-    public static PLAYER_NOT_FOUND = new HttpException(
-        'Players not found with the filter',
-        HttpStatus.NOT_FOUND,
-    );
 
-    public static LOCKED_TIME = new HttpException(
-        'You are late. Staking pool is closed. Try to stake next time.',
-        HttpStatus.BAD_REQUEST,
-    );
 }

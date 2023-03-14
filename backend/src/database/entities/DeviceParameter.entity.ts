@@ -15,4 +15,7 @@ export class DeviceParameter {
     @Column({ name: 'param_unit', type: 'nvarchar' })
     public paramUnit: string;
 
+    @Column({name: 'is_first_intro', type: 'boolean'})
+    public isFirstIntro: boolean
+
 }

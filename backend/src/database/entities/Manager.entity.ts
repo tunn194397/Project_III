@@ -6,17 +6,20 @@ export class Manager {
     @PrimaryGeneratedColumn({ name: 'id', type: 'int'})
     public id: number;
 
-    @Column({ name: 'branch_id', type: 'int' })
+    @Column({ name: 'user_id', type: 'int' })
+    public userId: number;
+
+    @Column({ name: 'branch_id', type: 'int', nullable: true })
     public branchId: number;
 
-    @Column({ name: 'certificates', type: 'nvarchar', length: 1000 })
+    @Column({ name: 'certificates', type: 'nvarchar', length: 1000 , nullable: true})
     public certificates: string;
 
-    @Column({ name: 'introduce', type: 'nvarchar', length: 1000 })
+    @Column({ name: 'introduce', type: 'nvarchar', length: 1000, nullable: true })
     public introduce: string;
 
-    @Column({ name: 'salary', type: 'int'})
-    public salary: string;
+    @Column({ name: 'salary', type: 'int', nullable: true})
+    public salary: number;
 
     @Column({ name: 'created_at', type: 'bigint', nullable: true })
     public createdAt: number;

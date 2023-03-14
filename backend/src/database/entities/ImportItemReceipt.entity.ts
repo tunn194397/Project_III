@@ -13,7 +13,7 @@ export class ImportItemReceipt {
     public quantity: number;
 
     @Column({ name: 'import_receipt_id', type: 'int' })
-    public ImportReceiptId: number;
+    public importReceiptId: number;
 
     @Column({ name: 'price', type: 'int'})
     public price: number;

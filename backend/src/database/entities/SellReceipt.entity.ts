@@ -9,22 +9,25 @@ export class SellReceipt {
     @Column({ name: 'customer_id', type: 'int' })
     public customerId: number;
 
-    @Column({ name: 'staff_id', type: 'int' })
+    @Column({ name: 'staff_id', type: 'int', nullable: true })
     public staffId: number;
 
-    @Column({ name: 'total_price', type: 'int' })
+    @Column({ name: 'total_price', type: 'int', nullable: true })
     public totalPrice: number;
 
-    @Column({ name: 'content', type: 'nvarchar'})
+    @Column({ name: 'content', type: 'nvarchar', nullable: true})
     public content: string;
 
-    @Column({ name: 'note', type: 'nvarchar'})
+    @Column({ name: 'note', type: 'nvarchar', nullable: true})
     public note: string;
 
-    @Column({ name: 'sale_off', type: 'integer'})
+    @Column({ name: 'sale_off', type: 'integer', default: 0})
     public saleOff: number;
 
-    @Column({ name: 'finalPrice', type: 'integer'})
+    @Column({ name: 'voucher_id', type: 'integer', default: 0})
+    public voucherId: number;
+
+    @Column({ name: 'final_price', type: 'integer', nullable: true})
     public finalPrice: number;
 
     @Column({ name: 'created_at', type: 'bigint', nullable: true })
